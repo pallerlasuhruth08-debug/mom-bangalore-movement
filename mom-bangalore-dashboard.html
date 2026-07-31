@@ -114,6 +114,19 @@ input[type=search],select{background:var(--surface-1);color:var(--text-primary);
 input[type=search]{min-width:210px}
 .dl{background:var(--series-1);color:#fff;border:0;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
 td.blank{background:var(--surface-2)}
+.curve{display:flex;align-items:flex-end;gap:3px;height:170px;margin:18px 0 6px}
+.curve div{flex:1;background:var(--seq-3);border-radius:3px 3px 0 0;position:relative;min-height:2px}
+.curve div.spike{background:var(--series-1)}
+.curve div.note{background:var(--series-2)}
+.curve div span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;
+ color:var(--text-muted);white-space:nowrap;padding-bottom:3px;font-variant-numeric:tabular-nums}
+.xaxis{display:flex;gap:3px;font-size:9.5px;color:var(--text-muted)}
+.xaxis div{flex:1;text-align:center;white-space:nowrap;overflow:hidden}
+.ins h3{font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
+.ins .rank{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--series-1);font-weight:700;margin-bottom:6px}
+.ins p{font-size:13.5px;color:var(--text-secondary);line-height:1.65;margin:8px 0}
+.ins p b,.ins li b{color:var(--text-primary)}
+.ins ul{font-size:13.5px;color:var(--text-secondary);line-height:1.7;padding-left:20px;margin:8px 0}
 
 </style>
 </head>
@@ -125,6 +138,7 @@ td.blank{background:var(--surface-2)}
 
 <div class="tabs" id="tabs">
   <button class="on" data-t="arg">The argument</button>
+  <button data-t="ins">Insights</button>
   <button data-t="plan">Mobilisation plan</button>
   <button data-t="pin">Pincode seed</button>
   <button data-t="cap">Captain seed</button>
@@ -141,6 +155,97 @@ td.blank{background:var(--surface-2)}
   <div class="target" id="heroTarget"></div>
 </div>
 <div class="flag"><b>The one number that carries the argument</b><span id="notMed"></span></div>
+</section>
+
+<!-- ============ INSIGHTS ============ -->
+<section data-p="ins" class="hidden">
+
+<div class="card ins">
+  <div class="rank">Insight 1 — the one that changes the plan</div>
+  <h3>You are not recruiting from a growing community. You are reactivating a cold list.</h3>
+  <div class="curve" id="curve"></div>
+  <div class="xaxis" id="xaxis"></div>
+  <p><b>73% of the entire Bangalore base — 213,648 of 293,569 people — registered in the first two months after launch, seventeen months ago.</b> Since then the city has added about 5,000 a month, and 2026 is running slower than 2025 at 3,839.</p>
+  <ul>
+    <li><b>The 3% assumption is far more fragile than it looks.</b> Three percent of an engaged, growing community is a reasonable planning number. Three percent of a seventeen-month-old registration list that has never been contacted is a guess. The plan treats them as the same population.</li>
+    <li><b>Organic growth will not help.</b> At the current run rate, August–November adds roughly 15,000 users — 5% on the base. Nothing in the December arithmetic can lean on new signups.</li>
+    <li><b>The campaign's real job is reactivation, not acquisition.</b> "Come back" is a different ask from "join" — different copy, different first touch, lower expected response. Plan for it now rather than discovering it in October.</li>
+  </ul>
+  <div class="flag"><b>One bright spot worth chasing.</b>October 2025 shows 9,488 signups against neighbouring months of 4,224 and 3,537. Something worked that month. It is the only evidence in eighteen months of a repeatable acquisition lever, and whoever ran it should be found this week.</div>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 2 — the cheapest pool, currently in nobody's plan</div>
+  <h3>Miracle of Mind has not penetrated Isha's own base</h3>
+  <p>Bangalore has <b>78,620 meditators</b> in Ishangam. Only <b>30,791</b> appear as MOM users. Matching is imperfect, so the honest range is that <b>26,000–48,000 Bangalore meditators are not on the app.</b></p>
+  <ul>
+    <li>They already meditate — no persuasion needed about the practice</li>
+    <li>They are contactable through their centre — <b>no dependency on the 1 November in-app date</b></li>
+    <li>Getting them on the app <b>directly produces December minutes</b>, whether or not they ever volunteer</li>
+    <li>It is a defensible ask for coordinators who may resist a general volunteering drive — <em>get your own people onto the app</em> is squarely their job</li>
+  </ul>
+  <p>If a third of that pool installs and meditates through December it is worth roughly a million minutes on its own — comparable to the entire uplift-on-existing-base lever in the phase plan, for far less effort. <b>Recommendation: make this a named workstream with a centre-wise target.</b></p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 3 — 21% of the base is uncountable</div>
+  <h3>Two "centres" are not centres</h3>
+  <table>
+    <thead><tr><th>Centre</th><th>MOM users</th><th>Active meditators</th><th>Users per meditator</th><th>Already meditators</th></tr></thead>
+    <tbody>
+      <tr><td>Bangalore Rural</td><td>43,639</td><td>793</td><td>55.0</td><td>1.8%</td></tr>
+      <tr><td>Budigere Cross</td><td>17,610</td><td>1,366</td><td>12.9</td><td>1.0%</td></tr>
+      <tr class="muted"><td>Every real centre</td><td>405–8,362</td><td>1,131–4,591</td><td>0.3–6.5</td><td>29–39%</td></tr>
+    </tbody>
+  </table>
+  <p>The city norm is about two app users per active meditator and roughly a third already being meditators. These two sit at 10–30&times; the ratio with almost no meditator overlap. <b>Together they hold 61,249 users — 21% of the Bangalore base.</b> Any per-centre target that includes them at face value will be wrong by a factor of ten, and any leaderboard will be won by a centre that did nothing. They are excluded from the seeds; what is still missing is an answer to <em>where these records came from</em>.</p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 4 — and the anomaly it reveals</div>
+  <h3>Strip those two out and the centre model is unusually consistent</h3>
+  <p>Every genuine Bangalore centre sits between <b>1.6 and 3.1</b> app users per active meditator, with <b>29–39%</b> meditator overlap. Jayanagar at 6.5 is the only mild outlier. That tightness is a gift — a per-centre model actually generalises, so you can set one centre's target from another's performance and expect it to hold.</p>
+  <p>It also makes the one genuine anomaly visible: <b>Girinagar, at 0.3 app users per active meditator</b> — 1,239 active meditators but only 405 MOM users, seven times below the norm in the wrong direction. Either the centre never pushed the app or something structural is blocking it. <b>The cheapest fix available: one conversation, not a campaign.</b></p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 5 — good news for the pin-charge model</div>
+  <h3>Referral behaviour is broad, not superstar-driven</h3>
+  <p>4,322 Bangalore referrers produced 12,367 referrals. Top 10 account for 9.5%, top 100 for 22.5%, top 500 for 46.9%. The <b>median referrer referred exactly one person</b>; the largest referred 496.</p>
+  <p>A power law, but a mild one — no tiny elite carrying everything. <b>The 1,088 people who have referred three or more are a genuinely broad recruiting base</b>, not a handful of super-connectors who will be over-asked and burn out. A model depending on thousands of ordinary people each bringing a few others is exactly what this distribution supports.</p>
+  <p>It also argues for the plan of record's two-currency design. Rewarding <em>teams spawned</em> separately from <em>minutes</em> aims precisely at converting median referrers — people who have already brought one person — into people who bring five. That is where the volume is, not at the top of the list.</p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 6 — reframes the 1 Nov date</div>
+  <h3>Consent is not the constraint. Contact data is.</h3>
+  <p><b>417 people out of 293,569 are on do-not-disturb</b> — one in seven hundred — and 99.6% carry an explicit opt-in. But <b>42% have no phone number on record.</b> The wall between you and the base is not permission or goodwill; it is missing contact data. In-app access is therefore not a channel preference, it is the only route to 123,000 people you are otherwise structurally unable to reach.</p>
+  <p>Cheap parallel play: every touchpoint between now and December — consecration, IE closings, school sessions, pincode meetups — should capture a phone number as a first-class action. Every number captured permanently converts an unreachable user into a reachable one.</p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 7 — the target passes its first real check</div>
+  <h3>10,000 survives contact with the data, but only just</h3>
+  <p>Two independent methods agree: pincode tiers built bottom-up from 71,750 real records give <b>8,806</b>, and the residual needed to reach 10,000 is <b>1,194</b> — almost exactly the 1,200 the grassroots plan had already assigned to consecration, IE closings and walk-ins. That is the first external check the number has ever had, and it passes.</p>
+  <p>But the margin is thin and depends on reaching the full base. Without in-app notification the ceiling is <b>7,859</b>, and no amount of ground effort closes a 2,141-person gap in eighteen weeks. Read with Insight 1 — the base is cold, not warm — the sensible posture is: <b>hold 10,000 as the public number, plan the ground structure for 7,859, and treat everything above that as contingent on in-app access landing on time.</b></p>
+</div>
+
+<div class="card ins">
+  <div class="rank">Insight 8 — structure</div>
+  <h3>Over-built at the bottom, under-built at the top</h3>
+  <p>Twenty pincodes carry half the target; 87 carry a fifth between them. A flat hundred-captain grid spends the same effort on a pincode worth 12 volunteers as on one worth 369. Cutting to ~63 — dedicated captains with cell-leader depth in Tier 1, one each in Tier 2, Tier 3 clustered into ~15 multi-pincode captaincies — redeploys that capacity where the volunteers are. And the top can be staffed from people already doing the job: <b>1,088 have referred 3+ people unprompted, and every Tier 1 pincode has at least five.</b></p>
+</div>
+
+<div class="card ins">
+  <h2>What I would do first</h2>
+  <ol style="font-size:13.5px;color:var(--text-secondary);line-height:1.8;padding-left:20px;margin:0">
+    <li><b>Find out what happened in October 2025.</b> The only repeatable acquisition lever visible in eighteen months of data.</li>
+    <li><b>Open the meditator-onboarding workstream.</b> 26,000–48,000 Bangalore meditators are not on the app. Cheapest minutes and cheapest volunteers available, with no dependency on 1 November.</li>
+    <li><b>Get an answer on Bangalore Rural and Budigere Cross.</b> 21% of the base is currently uncountable.</li>
+    <li><b>Reframe the campaign internally as reactivation.</b> The base is seventeen months cold. Getting this wrong is invisible until October.</li>
+    <li><b>Escalate in-app access this week.</b> It is the difference between 7,859 and 10,000.</li>
+  </ol>
+</div>
 </section>
 
 <!-- ============ PLAN ============ -->
@@ -637,6 +742,21 @@ document.getElementById('dl').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='mom-bangalore-captain-seed.csv';a.click();URL.revokeObjectURL(a.href);
 };
+
+
+/* ---- signup curve ---- */
+const MONTHS=[["Feb 25",152309],["Mar 25",61339],["Apr 25",8974],["May 25",6889],["Jun 25",8252],["Jul 25",4691],
+ ["Aug 25",3867],["Sep 25",4224],["Oct 25",9488],["Nov 25",3537],["Dec 25",3140],["Jan 26",4606],["Feb 26",5869],
+ ["Mar 26",2828],["Apr 26",2731],["May 26",2632],["Jun 26",4366],["Jul 26",3838]];
+(function(){
+  const mxv=Math.max(...MONTHS.map(m=>m[1]));
+  document.getElementById('curve').innerHTML=MONTHS.map(([k,v])=>{
+    const cls=v>50000?'spike':(k==='Oct 25'?'note':'');
+    const lab=(v>50000||k==='Oct 25')?'<span>'+v.toLocaleString('en-IN')+'</span>':'';
+    return '<div class="'+cls+'" style="height:'+Math.max(1.2,100*v/mxv)+'%" title="'+k+': '+v.toLocaleString('en-IN')+'">'+lab+'</div>';
+  }).join('');
+  document.getElementById('xaxis').innerHTML=MONTHS.map(([k])=>'<div>'+k+'</div>').join('');
+})();
 
 /* ---- tabs ---- */
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
