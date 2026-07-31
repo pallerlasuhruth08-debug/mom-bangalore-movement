@@ -1,0 +1,11 @@
+# scratch / derived
+_*.txt
+pins_js.txt
+pin_*.json
+blr_*.json
+*.png
+node_modules/
+
+# never commit personal data pulled from Ishangam
+*call-list*
+*-pii.*

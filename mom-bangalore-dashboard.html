@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" data-palette="#2a78d6,#eb6834">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOM Bangalore — mobilisation dashboard</title>
+<style>
+
+:root{
+  color-scheme: light;
+  --surface-0:#f4f4f1; --surface-1:#fcfcfb; --surface-2:#eceae4;
+  --line:#dedbd2; --line-strong:#c5c2b6;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7d7b74;
+  --series-1:#2a78d6;   /* MOM app */
+  --series-2:#eb6834;   /* Isha meditators */
+  --warn:#eda100; --bad:#e34948; --good:#1baf7a;
+  --seq-1:#e3edfa; --seq-2:#b9d3f2; --seq-3:#7fb0e6; --seq-4:#2a78d6; --seq-5:#1b508f;
+}
+@media (prefers-color-scheme: dark){
+ :root:where(:not([data-theme="light"])){
+  color-scheme: dark;
+  --surface-0:#111110; --surface-1:#1a1a19; --surface-2:#252523;
+  --line:#33332f; --line-strong:#4a4a45;
+  --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8f8e85;
+  --series-1:#3987e5; --series-2:#d95926;
+  --seq-1:#1b2635; --seq-2:#22405f; --seq-3:#2a5f96; --seq-4:#3987e5; --seq-5:#7fb0e6;
+ }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);
+ font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:24px}
+.wrap{max-width:1280px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--text-secondary);font-size:13px;margin-bottom:18px;max-width:900px}
+.card{background:var(--surface-1);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin:0 0 14px;font-weight:600}
+
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden}
+.seg button{background:var(--surface-1);color:var(--text-secondary);border:0;padding:8px 16px;font-weight:600;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--series-1);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface-1);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi.hl{border-color:var(--series-1);box-shadow:inset 3px 0 0 var(--series-1)}
+.kpi .lab{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:6px}
+.kpi .val{font-size:26px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .note{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+.hero{background:var(--surface-1);border:1px solid var(--line);border-radius:10px;padding:26px 28px;margin-bottom:16px}
+.hero h3{margin:0 0 6px;font-size:19px;letter-spacing:-.01em}
+.hero .lede{font-size:13px;color:var(--text-secondary);margin-bottom:22px;max-width:820px}
+.vs{display:grid;gap:14px;max-width:880px}
+.vsrow{display:grid;grid-template-columns:230px 1fr 128px;gap:14px;align-items:center}
+.vsrow .nm{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
+.vsrow .nm b{display:block;color:var(--text-primary);font-size:14px}
+.track{background:var(--surface-2);border-radius:0 4px 4px 0;height:30px;position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0}
+.vsrow .num{text-align:right;font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.target{border-top:1px dashed var(--line-strong);margin-top:20px;padding-top:14px;font-size:13px;color:var(--text-secondary);max-width:880px}
+.target b{color:var(--text-primary)}
+
+.flag{background:#fff6e0;border-left:3px solid var(--warn);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;color:#5a4200;margin-bottom:10px}
+.flag.stop{background:#fdeaea;border-left-color:var(--bad);color:#6d1a19}
+.flag > b:first-child{display:block;margin-bottom:3px}
+@media (prefers-color-scheme: dark){:root:where(:not([data-theme="light"])) .flag{background:#3a2f10;color:#f0d68a}
+ :root:where(:not([data-theme="light"])) .flag.stop{background:#3d1917;color:#f5b3b0}}
+
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th{text-align:right;padding:8px 9px;border-bottom:1.5px solid var(--line-strong);
+ font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-secondary);
+ font-weight:600;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left}
+th.asc::after{content:" ▲";color:var(--series-1)}
+th.desc::after{content:" ▼";color:var(--series-1)}
+td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr.muted td{color:var(--text-muted);font-style:italic}
+tfoot td{font-weight:650;border-top:1.5px solid var(--line-strong);border-bottom:none}
+td.barcell{position:relative}
+.bar i{position:absolute;left:0;top:50%;transform:translateY(-50%);height:16px;background:var(--seq-2);border-radius:0 4px 4px 0;z-index:0}
+.bar span{position:relative;z-index:1}
+.dim{color:var(--text-muted)}
+.hidden{display:none}
+.foot{font-size:11.5px;color:var(--text-muted);line-height:1.6;margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--text-secondary);margin-bottom:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:transparent;color:var(--text-secondary);border:0;border-bottom:2px solid transparent;
+ padding:10px 16px;font-weight:600;font-size:13.5px;cursor:pointer;border-radius:0}
+.tabs button.on{color:var(--series-1);border-bottom-color:var(--series-1)}
+.tabs button:hover{color:var(--text-primary)}
+/* plan */
+.phase{display:grid;grid-template-columns:150px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.phase:last-child{border-bottom:0}
+.phase .when{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;line-height:1.4}
+.phase .when b{display:block;color:var(--series-1);font-size:13px;text-transform:none;letter-spacing:0;margin-bottom:2px}
+.phase h4{margin:0 0 6px;font-size:15px}
+.phase ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--text-secondary);line-height:1.7}
+.phase .gate{margin-top:8px;font-size:12.5px;background:var(--surface-2);border-radius:6px;padding:8px 12px;color:var(--text-secondary)}
+.phase .gate b{color:var(--text-primary)}
+.ladder{font:12.5px/1.7 ui-monospace,Menlo,monospace;background:var(--surface-2);border-radius:8px;padding:16px 18px;overflow-x:auto;white-space:pre;color:var(--text-secondary)}
+.risk{border-left:3px solid var(--bad);padding:10px 0 10px 14px;margin-bottom:14px;font-size:13px;color:var(--text-secondary)}
+.risk b{color:var(--text-primary);display:block;margin-bottom:2px;font-size:13.5px}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
+.mini div{background:var(--surface-2);border-radius:8px;padding:10px 13px}
+.mini .n{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.mini .l{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+input[type=search],select{background:var(--surface-1);color:var(--text-primary);border:1px solid var(--line-strong);
+ border-radius:7px;padding:7px 10px;font-size:13px}
+input[type=search]{min-width:210px}
+.dl{background:var(--series-1);color:#fff;border:0;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+td.blank{background:var(--surface-2)}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>MOM Bangalore — volunteer mobilisation</h1>
+<div class="sub">Live from Ishangam <code>miracle.of.mind</code> (2,392,695 records nationally), queried 31 Jul 2026, joined to <code>res.partner</code> and the Ishangam meditator baseline (10 Jul 2026). Target: 10,000 active Bangalore volunteers by 1 December 2026.</div>
+
+<div class="tabs" id="tabs">
+  <button class="on" data-t="arg">The argument</button>
+  <button data-t="plan">Mobilisation plan</button>
+  <button data-t="pin">Pincode seed</button>
+  <button data-t="cap">Captain seed</button>
+  <button data-t="data">Data &amp; limits</button>
+</div>
+
+<!-- ============ ARGUMENT ============ -->
+<section data-p="arg">
+<div class="kpis" id="kpis"></div>
+<div class="hero">
+  <h3>Where do 10,000 volunteers come from?</h3>
+  <div class="lede">The 30 July meeting assumed the centre system. It cannot get there. The app base can — but only the part of it we can actually contact.</div>
+  <div class="vs" id="vs"></div>
+  <div class="target" id="heroTarget"></div>
+</div>
+<div class="flag"><b>The one number that carries the argument</b><span id="notMed"></span></div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section data-p="plan" class="hidden">
+
+<div class="flag"><b>This is the data-driven plan, not the plan of record.</b>
+It models a volunteer as one person hosting one seven-minute sit. The team-based construct agreed on the 31 July morning call — captains building persistent teams, potential meditators included, schools at 300–500 — lives in <code>mom-volunteer-mobilisation-plan.md</code> and produces a different and larger minutes number. Read both. Where they disagree, the team construct is newer.</div>
+
+<div class="card">
+  <h2>The arithmetic error to fix first</h2>
+  <p style="font-size:14px;margin:0 0 12px">The grassroots plan says: assume 40% attrition, therefore sign up ~14,000. <b>Those two numbers do not go together.</b> 14,000 at 40% attrition yields 8,400 active, not 10,000.</p>
+  <div class="mini">
+    <div><div class="n">16,700</div><div class="l">signups actually needed</div></div>
+    <div><div class="n">14,000</div><div class="l">what the plan says</div></div>
+    <div><div class="n">2,700</div><div class="l">the shortfall</div></div>
+    <div><div class="n">28.6%</div><div class="l">attrition 14,000 implies</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--text-secondary);margin:0">Either raise the signup target to 16,700 or state explicitly that attrition is assumed at 28.6% — a much more optimistic claim than anyone has defended. The error compounds weekly because it is baked into every downstream tier target.</p>
+</div>
+
+<div class="card">
+  <h2>Where the 10,000 come from</h2>
+  <table>
+    <thead><tr><th>Pool</th><th>Active volunteers</th><th>Signups @40% attrition</th><th>Basis</th></tr></thead>
+    <tbody>
+      <tr><td>Tier 1 pincodes (20)</td><td>4,304</td><td>7,173</td><td>3% of estimated MOM base</td></tr>
+      <tr><td>Tier 2 pincodes (28)</td><td>2,684</td><td>4,473</td><td>3% of estimated MOM base</td></tr>
+      <tr><td>Tier 3 pincodes (87)</td><td>1,818</td><td>3,030</td><td>3% of estimated MOM base</td></tr>
+      <tr><td>Consecration harvest, IE closings, walk-ins</td><td>1,194</td><td>1,990</td><td>event capture, not pincode-driven</td></tr>
+    </tbody>
+    <tfoot><tr><td>Total</td><td>10,000</td><td>16,700</td><td>—</td></tr></tfoot>
+  </table>
+  <p style="font-size:13px;color:var(--text-secondary);margin:12px 0 0">The pincode tiers sum to 8,806. The residual, 1,194, lands almost exactly on the 1,200 the grassroots plan already assigned to event capture — two independent methods agreeing, which is the first external check this target has had.</p>
+</div>
+
+<div class="card">
+  <h2>The structure — 63 captains, not 100</h2>
+  <div class="ladder">        63 captains          →   ~950 cell leaders    →   16,700 signed hosts   →   10,000 active
+   20 Tier 1  (15 leaders ea)      300
+   28 Tier 2  (12 leaders ea)      336                     ~18 hosts per cell leader
+   15 Tier 3  (20 leaders ea)      300      clusters of ~6 low-density pincodes each</div>
+  <p style="font-size:13px;color:var(--text-secondary);margin:14px 0 0">Twenty pincodes carry half the target; 87 carry a fifth between them. A flat grid spends identical recruiting effort on a pincode worth 12 volunteers and one worth 369. Tier 3 is clustered because the alternative is 87 people each recruiting twenty volunteers — 87 relationships to manage for a fifth of the target.</p>
+</div>
+
+<div class="card">
+  <h2>The eighteen weeks</h2>
+  <div class="phase"><div class="when"><b>Phase 0</b>1–17 Aug</div><div>
+    <h4>Harvest and spine</h4>
+    <ul><li>Capture 700 signed intents from the ~2,000 consecration e-pass holders — a clipboard and a QR code are sufficient, and this does not wait for any approval</li>
+    <li>Name all 20 Tier 1 pin-charges from the seed roster</li>
+    <li>Cause name locked by 10 Aug <em>(dependency: cause &amp; communication)</em></li></ul>
+    <div class="gate"><b>Gate 17 Aug:</b> 20 Tier 1 captains named. Fewer than 15 means the timeline slips — and you want to know in August.</div></div></div>
+
+  <div class="phase"><div class="when"><b>Phase 1</b>18 Aug – 15 Sep</div><div>
+    <h4>Tier 1 build</h4>
+    <ul><li>Centre briefings begin — Rally for Rivers needed 3–4 months of lead time and December is four months out</li>
+    <li>20 Tier 1 captains active; 300 cell leaders recruited</li>
+    <li><b>First real sits happen here.</b> Not a pilot — actual seven-minute sits with actual strangers, so the model is proven before it is scaled</li>
+    <li>Cumulative signups: 2,500</li></ul>
+    <div class="gate"><b>Gate 15 Sep:</b> measure the real response rate against the 3% assumption. If it is 1.5%, every target halves and the structure needs re-cutting while there is still time.</div></div></div>
+
+  <div class="phase"><div class="when"><b>Phase 2</b>16 Sep – 15 Oct</div><div>
+    <h4>Tier 2 and platform</h4>
+    <ul><li>Platform live 30 Sep <em>(dependency: product track)</em></li>
+    <li>28 Tier 2 captains; 336 cell leaders</li>
+    <li>World Mental Health Day, 10 Oct — first public seeding moment</li>
+    <li>Cumulative signups: 6,500</li></ul></div></div>
+
+  <div class="phase"><div class="when"><b>Phase 3</b>16 Oct – 15 Nov</div><div>
+    <h4>Tier 3 clusters and the app push</h4>
+    <ul><li>15 Tier 3 cluster captains; 300 cell leaders</li>
+    <li><b>In-app notification access by 1 Nov</b> — the volume lever, and the single largest risk</li>
+    <li>Bulk of recruitment lands here: ~6,500 signups in four weeks</li>
+    <li>Cumulative signups: 13,000</li></ul></div></div>
+
+  <div class="phase"><div class="when"><b>Phase 4</b>16–30 Nov</div><div>
+    <h4>Activation and drill</h4>
+    <ul><li>Remaining 3,700 signups</li>
+    <li><b>Every host completes one practice sit before 1 December.</b> This is the anti-attrition mechanism, not a nicety</li>
+    <li>Public announcement, late November</li></ul>
+    <div class="gate"><b>1 Dec:</b> 16,700 signed → 10,000 active.</div></div></div>
+
+  <div class="phase"><div class="when"><b>Phase 5</b>1–31 Dec</div><div><h4>Run</h4></div></div>
+</div>
+
+<div class="card">
+  <h2>The death zone — and the three things that fix it</h2>
+  <p style="font-size:14px;margin:0 0 12px">Yoga Veera went 1,000 signed → 350 trained → <b>60 who actually did it</b>. The loss is not at signup and not at training. It is between being trained and doing it once.</p>
+  <ul style="font-size:13.5px;color:var(--text-secondary);line-height:1.8;margin:0 0 12px;padding-left:20px">
+    <li><b style="color:var(--text-primary)">First sit within 7 days of signup, cell leader physically present.</b> Close the gap between joining and doing and most attrition never happens.</li>
+    <li><b style="color:var(--text-primary)">A human call within 48 hours.</b> Not a WhatsApp broadcast. A person.</li>
+    <li><b style="color:var(--text-primary)">Visible attribution from day one.</b> Every host sees their own minutes counted from their first sit — not a city total they cannot locate themselves in.</li>
+  </ul>
+  <div class="flag"><b>The weekly metric that matters is not signups.</b>It is the share of new hosts completing a first sit within seven days. Below 50%, recruiting faster makes things worse — you are filling a bucket with a hole in it.</div>
+</div>
+
+<div class="card">
+  <h2>Four risks that can kill this</h2>
+  <div class="risk"><b>1 · In-app access slips past 1 November</b>Only 170,776 of 293,569 Bengaluru MOM users have a phone number on record. Reaching the other ~123,000 requires in-app notification. Without it the realistic ceiling is 7,859 and 10,000 is unreachable by any amount of ground effort. This is not a dependency on the critical path — it <em>is</em> the critical path. Escalate in the first week of August. Parallel mitigation: start phone outreach to the contactable 170,776 in Phase 1.</div>
+  <div class="risk"><b>2 · The 3% response rate is unvalidated</b>Carried from the grassroots plan; nothing in Ishangam confirms it. Test on Tier 1 in August, decide 15 September.</div>
+  <div class="risk"><b>3 · Registration density is not engagement density</b>Ishangam holds no sessions, minutes or last-active data, so the tiering ranks registrations — which may include people who opened the app once in 2025. Pincode 562114 shows 7,073 users against 117 active meditators; it is excluded, but only because it was large enough to see. Smaller artefacts are still in there.</div>
+  <div class="risk"><b>4 · The definition drifts</b>If "volunteer" quietly reverts to meaning someone who gives weekends, every number here is wrong and nobody notices until November. Write the one-sit definition into the captain brief and the signup form.</div>
+</div>
+
+<div class="card">
+  <h2>Immediate actions, this week</h2>
+  <table>
+    <thead><tr><th>#</th><th>Action</th><th>By</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Escalate the 1 Nov in-app access date — it gates the whole plan</td><td>5 Aug</td></tr>
+      <tr><td>2</td><td>Fix the 14,000 → 16,700 signup arithmetic in the grassroots plan</td><td>5 Aug</td></tr>
+      <tr><td>3</td><td>Stand up consecration intent capture — no approvals needed</td><td>before the event</td></tr>
+      <tr><td>4</td><td>Call the 20 Tier 1 pin-charge shortlists (see Captain seed)</td><td>17 Aug</td></tr>
+      <tr><td>5</td><td>Reconcile the centre count: plan says 18, Ishangam has 15, only 14 carry MOM records</td><td>10 Aug</td></tr>
+      <tr><td>6</td><td>Send the usage data request to MOM core</td><td>5 Aug</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- ============ PINCODE SEED ============ -->
+<section data-p="pin" class="hidden">
+<div class="card">
+  <h2>Pincode seed — 135 Bangalore pincodes</h2>
+  <div class="legend">
+    <span><b>Tier 1</b> — 20 pincodes carrying half the target</span>
+    <span><b>Tier 2</b> — next 30%</span>
+    <span><b>Tier 3</b> — the long tail</span>
+  </div>
+  <div class="row">
+    <input type="search" id="q" placeholder="Filter pincode, area or centre...">
+    <select id="tf"><option value="">All tiers</option><option value="1">Tier 1 only</option><option value="2">Tier 2</option><option value="3">Tier 3</option></select>
+    <span class="dim" id="pcount"></span>
+  </div>
+  <div style="max-height:560px;overflow:auto">
+  <table id="ptbl">
+    <thead><tr>
+      <th data-k="t">Tier</th><th data-k="p">Pincode</th><th data-k="a">Area</th><th data-k="c">Centre</th>
+      <th data-k="m">Matched users</th><th data-k="e">Est. MOM users</th><th data-k="am">Active meditators</th>
+      <th data-k="r">App / meditator</th><th data-k="v">Volunteer target</th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+  <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0">Estimated users = each pincode's share of the 71,750-record matched sample, applied to the 293,569 Bengaluru base. 562114 (Hoskote) is excluded from the distribution as a bulk-load artefact.</p>
+</div>
+</section>
+
+<!-- ============ CAPTAIN SEED ============ -->
+<section data-p="cap" class="hidden">
+<div class="card">
+  <h2>Captain / pin-charge seed</h2>
+  <div class="flag"><b>The pin-charge layer can be staffed from people already doing the job for free.</b>
+  1,088 people across Bangalore have already referred three or more others onto Miracle of Mind — no campaign, no incentive, no ask. <b>Every one of the 20 Tier 1 pincodes has at least five such candidates.</b> That turns Stage 1 from "find 135 people willing to lead a pincode" into "call the people already demonstrating the behaviour". 26 pincodes have zero candidates and must be sourced from the centre instead — they are flagged in the notes column of the CSV.</div>
+  <div class="mini">
+    <div><div class="n">3,516</div><div class="l">have referred ≥1 person</div></div>
+    <div><div class="n">1,088</div><div class="l">have referred ≥3 — the shortlist</div></div>
+    <div><div class="n">87</div><div class="l">pincodes with ≥3 candidates</div></div>
+    <div><div class="n">26</div><div class="l">pincodes with none</div></div>
+  </div>
+  <div class="row">
+    <input type="search" id="cq" placeholder="Filter pincode, area or centre...">
+    <select id="ctf"><option value="">All tiers</option><option value="1">Tier 1 only</option><option value="2">Tier 2</option><option value="3">Tier 3</option></select>
+    <button class="dl" id="dl">Download CSV</button>
+    <span class="dim" id="ccount"></span>
+  </div>
+  <div style="max-height:560px;overflow:auto">
+  <table id="ctbl">
+    <thead><tr>
+      <th data-k="t">Tier</th><th data-k="p">Pincode</th><th data-k="a">Area</th><th data-k="c">Centre</th>
+      <th data-k="r3">Candidates (≥3 refs)</th><th data-k="r1">Any referrers</th><th data-k="v">Volunteer target</th>
+      <th>Pin-charge</th><th>Phone</th><th>Status</th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+  <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0"><b>No names or numbers are held in this file.</b> To pull the actual call list, filter <code>miracle.of.mind</code> in Ishangam on <code>record_center</code> = your centre and <code>total_referred ≥ 3</code>, sorted descending — the contact details stay inside Ishangam where they belong. Status flow: <code>named</code> → <code>briefed</code> → <code>active</code>.</p>
+</div>
+</section>
+
+<!-- ============ DATA ============ -->
+<section data-p="data" class="hidden">
+<div class="card">
+  <h2>Three limits in the data — read before quoting any of this</h2>
+  <div class="flag">
+    <b>Pincode is real, but only for the matched quarter of the base.</b>
+    <code>ip_pincode</code> is IP geolocation and useless — all 81,465 Bengaluru records carrying it share the same value, 562114, and nationally the top values are 110001 / 400017 / 411001, city GPO centroids. Real pincodes come from the <code>contact_id_fkey</code> &rarr; <code>res.partner.zip</code> join: 76,002 of the 128,393 centre-assigned Bangalore records match a contact, and 71,750 resolve to a Bangalore pincode. That is 24% of the city base. Reliable <em>shape</em>, unreliable <em>magnitude</em> — the estimate assumes matched users (people Isha already holds a contact record for) live where unmatched ones do.
+  </div>
+  <div class="flag stop">
+    <b>There is no activity data. "Active app users" cannot be answered here.</b>
+    No sessions, no minutes, no last-active field. The only temporal field is <code>first_login_ts</code>, the registration date. The <code>active</code> boolean is Odoo's archive flag — all 2,392,695 records are <code>true</code>, so it means nothing. Usage still has to come from MOM core.
+  </div>
+  <div class="flag">
+    <b>Two data-quality artefacts.</b>
+    <em>Karnataka – Others</em> holds 146,906 records, more than every named Bangalore centre combined — roughly half the Karnataka base is unassigned. <em>Budigere Cross</em> shows 17,610 users of whom 100% first logged in during 2026 and 8,320 since May, against only 170 meditators; at pincode level the same artefact lands as 7,073 matched users in 562114 (Hoskote) against 117 active meditators, a ratio 30&times; the city norm. Both are shown but excluded from every ranking and allocation.
+  </div>
+</div>
+
+<div class="card">
+  <h2>By centre</h2>
+  <div class="legend">
+    <span><i style="background:var(--series-1)"></i>MOM app users (Ishangam <code>record_center</code>)</span>
+    <span><i style="background:var(--series-2)"></i>Isha meditators (Ishangam baseline)</span>
+  </div>
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="ctr">Centre</th><th data-k="mom">MOM users</th><th data-k="netNew">Not yet meditators</th>
+      <th data-k="momMed">Already meditators</th><th data-k="ph">Phone on record</th><th data-k="y26">Signed up 2026</th>
+      <th data-k="am">Active meditators</th><th data-k="ratio">App users / active meditator</th><th data-k="vol">Volunteers @3%</th>
+    </tr></thead>
+    <tbody></tbody><tfoot></tfoot>
+  </table>
+</div>
+</section>
+
+<div class="foot">
+<b>Sources &amp; method.</b> MOM columns: Ishangam <code>miracle.of.mind</code>, grouped on <code>record_center</code>, queried 31 Jul 2026 — 2,392,695 records nationally, 293,569 with <code>ip_city = Bengaluru</code>. "Not yet meditators" = users minus <code>is_meditator</code>. "Phone on record" = <code>record_phone</code> set. "Signed up 2026" = <code>first_login_ts ≥ 1 Jan 2026</code>. Meditator and active-meditator columns: Ishangam / Santosha, region Karnataka, snapshot 10 Jul 2026; "active" = last transaction within 12 months. Centre figures use Ishangam's own centre assignment and are <em>not</em> filtered by IP city. Kanakapura Road returns zero MOM records under that name. Pincode columns: <code>contact_id_fkey</code> joined to <code>res.partner.zip</code> — 76,002 matched, 71,750 resolving to a Bangalore pincode, 2,441 outside the city, 96 invalid; ~2% of partner reads are withheld by record rules. Referrer columns: <code>total_referred</code> on the same matched set — 3,804 distinct referring contacts, 288 outside the Bangalore pincode list. "Volunteers @3%" is the campaign planning assumption from the grassroots plan, not an observed conversion rate.
+</div>
+
+</div>
+<script>
+const CTR = [
+{ctr:"Banaswadi",mom:4821,momMed:1567,y26:356,q3:130,ph:3962,med:6101,am:2328,pins:9},
+{ctr:"Bangalore Rural",mom:43639,momMed:807,y26:2460,q3:49,ph:16744,med:1293,am:793,pins:21},
+{ctr:"Bannerghatta Road",mom:6606,momMed:2287,y26:521,q3:161,ph:5483,med:7393,am:3191,pins:6},
+{ctr:"Budigere Cross",mom:17610,momMed:170,y26:17610,q3:8320,ph:6857,med:2118,am:1366,pins:4,odd:1},
+{ctr:"Electronic City",mom:6436,momMed:2089,y26:806,q3:230,ph:5160,med:6101,am:3318,pins:7},
+{ctr:"Girinagar",mom:405,momMed:122,y26:211,q3:71,ph:316,med:2949,am:1239,pins:3},
+{ctr:"Hebbal",mom:8362,momMed:2889,y26:681,q3:213,ph:6967,med:9540,am:4591,pins:14},
+{ctr:"Indiranagar",mom:5645,momMed:1885,y26:511,q3:92,ph:4570,med:5388,am:1807,pins:9},
+{ctr:"Jayanagar",mom:7374,momMed:2403,y26:200,q3:84,ph:6037,med:3055,am:1131,pins:10},
+{ctr:"Koramangala",mom:5736,momMed:2237,y26:504,q3:164,ph:4899,med:7805,am:3487,pins:8},
+{ctr:"Malleswaram",mom:6099,momMed:1762,y26:478,q3:146,ph:4908,med:6341,am:2630,pins:19},
+{ctr:"Marathahalli",mom:5606,momMed:2121,y26:486,q3:164,ph:4707,med:6953,am:3375,pins:4},
+{ctr:"Vijayanagar",mom:8191,momMed:2485,y26:672,q3:201,ph:6676,med:7952,am:3796,pins:15},
+{ctr:"Whitefield",mom:1863,momMed:708,y26:168,q3:59,ph:1598,med:2385,am:1154,pins:2},
+{ctr:"Karnataka – Others (unassigned)",mom:146906,momMed:1463,y26:85,q3:35,ph:75027,med:0,am:0,pins:0,odd:1}
+];
+
+const CITY = {users:293569, meditators:30791, phone:170776, dnd:417, withCentre:126737, login2026:26859, loginJul26:3827};
+const CONV_LO=0.03, CONV_HI=0.08, APP_RATE=0.03, TARGET=10000;
+
+const PINS=[
+{p:"560001",a:"MG Road / Shivajinagar",c:"Indiranagar",m:326,e:1480,am:171,v:44,t:3,r3:7,r1:19},
+{p:"560002",a:"City Market",c:"Jayanagar",m:139,e:631,am:44,v:19,t:3,r3:2,r1:5},
+{p:"560003",a:"Malleswaram",c:"Malleswaram",m:553,e:2510,am:305,v:75,t:2,r3:9,r1:26},
+{p:"560004",a:"Basavanagudi",c:"Jayanagar",m:465,e:2111,am:269,v:63,t:2,r3:8,r1:22},
+{p:"560005",a:"Fraser Town",c:"Banaswadi",m:193,e:876,am:100,v:26,t:3,r3:1,r1:5},
+{p:"560006",a:"JC Nagar",c:"Hebbal",m:53,e:241,am:32,v:7,t:3,r3:0,r1:0},
+{p:"560007",a:"Agram / Ulsoor South",c:"Indiranagar",m:35,e:159,am:12,v:5,t:3,r3:0,r1:0},
+{p:"560008",a:"Halasuru (Ulsoor)",c:"Indiranagar",m:536,e:2433,am:274,v:73,t:2,r3:6,r1:19},
+{p:"560009",a:"Gandhinagar / KG Road",c:"Malleswaram",m:51,e:231,am:21,v:7,t:3,r3:3,r1:3},
+{p:"560010",a:"Rajajinagar",c:"Malleswaram",m:886,e:4022,am:379,v:121,t:2,r3:10,r1:39},
+{p:"560011",a:"Jayanagar East",c:"Jayanagar",m:353,e:1602,am:176,v:48,t:3,r3:5,r1:16},
+{p:"560012",a:"IISc / Sadashivanagar",c:"Malleswaram",m:60,e:272,am:33,v:8,t:3,r3:1,r1:2},
+{p:"560013",a:"Jalahalli",c:"Malleswaram",m:307,e:1393,am:153,v:42,t:3,r3:4,r1:15},
+{p:"560014",a:"Jalahalli West",c:"Malleswaram",m:40,e:182,am:10,v:5,t:3,r3:1,r1:3},
+{p:"560015",a:"Jalahalli East",c:"Malleswaram",m:175,e:794,am:83,v:24,t:3,r3:1,r1:11},
+{p:"560016",a:"Ramamurthy Nagar / Dooravani Nagar",c:"Banaswadi",m:1270,e:5765,am:689,v:173,t:1,r3:19,r1:63},
+{p:"560017",a:"Vimanapura / HAL",c:"Indiranagar",m:446,e:2024,am:249,v:61,t:3,r3:3,r1:15},
+{p:"560018",a:"Chamrajpet",c:"Jayanagar",m:201,e:912,am:81,v:27,t:3,r3:1,r1:10},
+{p:"560019",a:"Gavipuram / Kempegowda Nagar",c:"Jayanagar",m:262,e:1189,am:110,v:36,t:3,r3:3,r1:9},
+{p:"560020",a:"Seshadripuram",c:"Malleswaram",m:153,e:694,am:67,v:21,t:3,r3:2,r1:7},
+{p:"560021",a:"Srirampuram",c:"Malleswaram",m:455,e:2065,am:166,v:62,t:2,r3:3,r1:12},
+{p:"560022",a:"Yeshwanthpur",c:"Malleswaram",m:404,e:1834,am:171,v:55,t:3,r3:3,r1:18},
+{p:"560023",a:"Magadi Road / Binnipet",c:"Vijayanagar",m:276,e:1253,am:147,v:38,t:3,r3:3,r1:12},
+{p:"560024",a:"Hebbal / Anandnagar",c:"Hebbal",m:633,e:2873,am:349,v:86,t:2,r3:11,r1:37},
+{p:"560025",a:"Richmond Town",c:"Banaswadi",m:89,e:404,am:42,v:12,t:3,r3:0,r1:3},
+{p:"560026",a:"Deepanjali Nagar / Mysore Road",c:"Vijayanagar",m:267,e:1212,am:105,v:36,t:3,r3:6,r1:15},
+{p:"560027",a:"Shanthinagar / Wilson Garden",c:"Jayanagar",m:287,e:1303,am:111,v:39,t:3,r3:2,r1:9},
+{p:"560028",a:"Jayanagar (560028)",c:"Jayanagar",m:110,e:499,am:59,v:15,t:3,r3:0,r1:4},
+{p:"560029",a:"BTM / Dairy Circle",c:"Koramangala",m:420,e:1906,am:208,v:57,t:3,r3:4,r1:14},
+{p:"560030",a:"Adugodi",c:"Koramangala",m:213,e:967,am:101,v:29,t:3,r3:6,r1:16},
+{p:"560031",a:"Benson Town North (560031)",c:"Malleswaram",m:3,e:14,am:2,v:0,t:3,r3:0,r1:0},
+{p:"560032",a:"RT Nagar",c:"Hebbal",m:792,e:3595,am:342,v:108,t:2,r3:15,r1:47},
+{p:"560033",a:"Maruthi Seva Nagar / Kacharakanahalli",c:"Banaswadi",m:238,e:1080,am:74,v:32,t:3,r3:3,r1:9},
+{p:"560034",a:"Koramangala",c:"Koramangala",m:454,e:2061,am:271,v:62,t:3,r3:5,r1:16},
+{p:"560035",a:"Sarjapur Road / Carmelaram",c:"Koramangala",m:1142,e:5184,am:808,v:156,t:1,r3:26,r1:68},
+{p:"560036",a:"KR Puram",c:"Budigere Cross",m:978,e:4439,am:542,v:133,t:2,r3:15,r1:52},
+{p:"560037",a:"Marathahalli",c:"Marathahalli",m:2174,e:9868,am:1368,v:296,t:1,r3:36,r1:106},
+{p:"560038",a:"Indiranagar",c:"Indiranagar",m:409,e:1856,am:199,v:56,t:3,r3:5,r1:15},
+{p:"560039",a:"Nayandahalli",c:"Vijayanagar",m:131,e:595,am:70,v:18,t:3,r3:2,r1:6},
+{p:"560040",a:"Vijayanagar",c:"Vijayanagar",m:1019,e:4625,am:518,v:139,t:1,r3:9,r1:47},
+{p:"560041",a:"Jayanagar",c:"Jayanagar",m:286,e:1298,am:203,v:39,t:3,r3:6,r1:17},
+{p:"560042",a:"Sivanchetti Gardens",c:"Indiranagar",m:125,e:567,am:80,v:17,t:3,r3:1,r1:4},
+{p:"560043",a:"Kalyan Nagar / HBR Layout",c:"Banaswadi",m:1952,e:8860,am:1115,v:266,t:1,r3:36,r1:112},
+{p:"560045",a:"Ganganagar / Sultanpalya",c:"Hebbal",m:315,e:1430,am:168,v:43,t:3,r3:5,r1:14},
+{p:"560046",a:"Benson Town",c:"Banaswadi",m:99,e:449,am:42,v:13,t:3,r3:2,r1:4},
+{p:"560047",a:"Viveknagar / Austin Town",c:"Banaswadi",m:395,e:1793,am:151,v:54,t:3,r3:5,r1:15},
+{p:"560048",a:"Mahadevapura / Hoodi",c:"Marathahalli",m:1018,e:4621,am:702,v:139,t:2,r3:24,r1:58},
+{p:"560049",a:"Virgonagar / Old Madras Rd",c:"Budigere Cross",m:1026,e:4657,am:695,v:140,t:1,r3:24,r1:66},
+{p:"560050",a:"Banashankari / Srinagar",c:"Girinagar",m:485,e:2201,am:204,v:66,t:2,r3:4,r1:21},
+{p:"560051",a:"Shivajinagar / Commercial St",c:"Banaswadi",m:32,e:145,am:12,v:4,t:3,r3:1,r1:4},
+{p:"560052",a:"Vasanth Nagar / High Grounds",c:"Malleswaram",m:41,e:186,am:27,v:6,t:3,r3:0,r1:3},
+{p:"560053",a:"Chickpet / Balepet",c:"Jayanagar",m:135,e:613,am:30,v:18,t:3,r3:1,r1:5},
+{p:"560054",a:"Mathikere / MSR Nagar",c:"Malleswaram",m:519,e:2356,am:248,v:71,t:2,r3:9,r1:26},
+{p:"560055",a:"Malleswaram West",c:"Malleswaram",m:205,e:930,am:98,v:28,t:3,r3:5,r1:11},
+{p:"560056",a:"Jnana Bharathi / Ullal Upanagara",c:"Vijayanagar",m:666,e:3023,am:259,v:91,t:2,r3:11,r1:33},
+{p:"560057",a:"Peenya Dasarahalli",c:"Vijayanagar",m:369,e:1675,am:132,v:50,t:3,r3:5,r1:18},
+{p:"560058",a:"Peenya Industrial Area",c:"Malleswaram",m:366,e:1661,am:129,v:50,t:3,r3:7,r1:21},
+{p:"560059",a:"Rajarajeshwari Nagar / RV Niketan",c:"Vijayanagar",m:220,e:999,am:113,v:30,t:3,r3:3,r1:14},
+{p:"560060",a:"Kengeri",c:"Vijayanagar",m:770,e:3495,am:440,v:105,t:2,r3:19,r1:49},
+{p:"560061",a:"Uttarahalli / Subramanyapura",c:"Kanakapura Road",m:1450,e:6582,am:790,v:197,t:1,r3:33,r1:87},
+{p:"560062",a:"Konanakunte / Puttenahalli",c:"Kanakapura Road",m:1053,e:4780,am:666,v:143,t:1,r3:28,r1:69},
+{p:"560063",a:"Yelahanka AFS / Jakkur",c:"Hebbal",m:98,e:445,am:72,v:13,t:3,r3:4,r1:8},
+{p:"560064",a:"Yelahanka",c:"Hebbal",m:2114,e:9595,am:1322,v:288,t:1,r3:38,r1:115},
+{p:"560065",a:"GKVK / Hebbal North",c:"Hebbal",m:197,e:894,am:108,v:27,t:3,r3:2,r1:13},
+{p:"560066",a:"Whitefield",c:"Whitefield",m:1719,e:7803,am:1150,v:234,t:1,r3:23,r1:83},
+{p:"560067",a:"Kadugodi",c:"Marathahalli",m:1157,e:5252,am:734,v:158,t:1,r3:18,r1:57},
+{p:"560068",a:"Bommanahalli / Singasandra",c:"Electronic City",m:2319,e:10526,am:1272,v:316,t:1,r3:32,r1:132},
+{p:"560069",a:"Jayanagar South (560069)",c:"Jayanagar",m:89,e:404,am:48,v:12,t:3,r3:3,r1:8},
+{p:"560070",a:"Padmanabhanagar / BSK II",c:"Girinagar",m:752,e:3413,am:361,v:102,t:2,r3:12,r1:40},
+{p:"560071",a:"Domlur",c:"Indiranagar",m:186,e:844,am:107,v:25,t:3,r3:2,r1:8},
+{p:"560072",a:"Nagarbhavi",c:"Vijayanagar",m:975,e:4426,am:440,v:133,t:2,r3:14,r1:49},
+{p:"560073",a:"Chikkabanavara / Bagalgunte",c:"Malleswaram",m:676,e:3068,am:334,v:92,t:2,r3:5,r1:26},
+{p:"560074",a:"Kumbalgodu",c:"Vijayanagar",m:106,e:481,am:54,v:14,t:3,r3:1,r1:3},
+{p:"560075",a:"New Thippasandra",c:"Indiranagar",m:673,e:3055,am:362,v:92,t:2,r3:10,r1:37},
+{p:"560076",a:"Bilekahalli / Bannerghatta Rd",c:"Bannerghatta Road",m:2711,e:12305,am:1456,v:369,t:1,r3:35,r1:144},
+{p:"560077",a:"Kothanur / Thanisandra",c:"Hebbal",m:910,e:4130,am:580,v:124,t:2,r3:18,r1:52},
+{p:"560078",a:"JP Nagar",c:"Bannerghatta Road",m:2311,e:10490,am:1221,v:315,t:1,r3:43,r1:124},
+{p:"560079",a:"Basaveshwaranagar",c:"Vijayanagar",m:939,e:4262,am:420,v:128,t:2,r3:14,r1:40},
+{p:"560080",a:"Sadashivanagar",c:"Malleswaram",m:69,e:313,am:30,v:9,t:3,r3:0,r1:0},
+{p:"560081",a:"Bommasandra Industrial Area",c:"Electronic City",m:39,e:177,am:29,v:5,t:3,r3:2,r1:3},
+{p:"560082",a:"Kaggalipura / Kanakapura Rd",c:"Kanakapura Road",m:199,e:903,am:124,v:27,t:3,r3:2,r1:12},
+{p:"560083",a:"Bannerghatta",c:"Bannerghatta Road",m:513,e:2329,am:296,v:70,t:2,r3:8,r1:22},
+{p:"560084",a:"Kammanahalli / St Thomas Town",c:"Banaswadi",m:230,e:1044,am:103,v:31,t:3,r3:4,r1:9},
+{p:"560085",a:"Banashankari III / Girinagar",c:"Girinagar",m:1334,e:6055,am:674,v:182,t:1,r3:24,r1:71},
+{p:"560086",a:"Mahalakshmipuram",c:"Malleswaram",m:487,e:2210,am:223,v:66,t:2,r3:5,r1:17},
+{p:"560087",a:"Varthur / Gunjur",c:"Marathahalli",m:822,e:3731,am:571,v:112,t:2,r3:16,r1:41},
+{p:"560088",a:"Bangalore Rural (560088)",c:"Bangalore Rural",m:19,e:86,am:12,v:3,t:3,r3:0,r1:1},
+{p:"560089",a:"Bangalore Rural (560089)",c:"Bangalore Rural",m:42,e:191,am:16,v:6,t:3,r3:0,r1:2},
+{p:"560090",a:"Bangalore Rural (560090)",c:"Bangalore Rural",m:323,e:1466,am:147,v:44,t:3,r3:4,r1:13},
+{p:"560091",a:"Sunkadakatte / Herohalli",c:"Vijayanagar",m:926,e:4203,am:416,v:126,t:2,r3:13,r1:30},
+{p:"560092",a:"Sahakara Nagar / Byatarayanapura",c:"Hebbal",m:806,e:3658,am:470,v:110,t:2,r3:17,r1:51},
+{p:"560093",a:"CV Raman Nagar",c:"Indiranagar",m:576,e:2614,am:353,v:78,t:2,r3:9,r1:36},
+{p:"560094",a:"Sanjaynagar / RMV II",c:"Hebbal",m:769,e:3490,am:436,v:105,t:2,r3:11,r1:42},
+{p:"560095",a:"Ejipura / Koramangala VI",c:"Koramangala",m:193,e:876,am:100,v:26,t:3,r3:4,r1:7},
+{p:"560096",a:"Nandini Layout",c:"Malleswaram",m:314,e:1425,am:151,v:43,t:3,r3:9,r1:21},
+{p:"560097",a:"Vidyaranyapura",c:"Hebbal",m:1320,e:5991,am:699,v:180,t:1,r3:28,r1:79},
+{p:"560098",a:"Rajarajeshwari Nagar",c:"Vijayanagar",m:1079,e:4898,am:569,v:147,t:1,r3:15,r1:64},
+{p:"560099",a:"Bommasandra / Hebbagodi",c:"Electronic City",m:626,e:2841,am:404,v:85,t:2,r3:16,r1:44},
+{p:"560100",a:"Electronic City",c:"Electronic City",m:2063,e:9364,am:1308,v:281,t:1,r3:46,r1:138},
+{p:"560102",a:"HSR Layout",c:"Koramangala",m:1342,e:6091,am:950,v:183,t:1,r3:22,r1:75},
+{p:"560103",a:"Bellandur",c:"Koramangala",m:1039,e:4716,am:719,v:141,t:1,r3:16,r1:56},
+{p:"560104",a:"Mallathahalli / Annapurneshwari Ngr",c:"Vijayanagar",m:164,e:744,am:91,v:22,t:3,r3:5,r1:11},
+{p:"560105",a:"Anekal",c:"Bannerghatta Road",m:245,e:1112,am:128,v:33,t:3,r3:5,r1:13},
+{p:"560106",a:"Hebbal (560106)",c:"Hebbal",m:5,e:23,am:1,v:1,t:3,r3:0,r1:0},
+{p:"560107",a:"Bangalore Rural (560107)",c:"Bangalore Rural",m:22,e:100,am:7,v:3,t:3,r3:0,r1:2},
+{p:"560108",a:"Jigani",c:"Bannerghatta Road",m:113,e:513,am:66,v:15,t:3,r3:7,r1:11},
+{p:"560109",a:"Thalaghattapura / Vajarahalli",c:"Kanakapura Road",m:221,e:1003,am:192,v:30,t:3,r3:8,r1:22},
+{p:"560110",a:"Ullalu / Kommaghatta",c:"Vijayanagar",m:41,e:186,am:22,v:6,t:3,r3:1,r1:2},
+{p:"560111",a:"Bannerghatta (560111)",c:"Bannerghatta Road",m:30,e:136,am:24,v:4,t:3,r3:0,r1:0},
+{p:"560112",a:"Bangalore Rural (560112)",c:"Bangalore Rural",m:5,e:23,am:2,v:1,t:3,r3:0,r1:0},
+{p:"560113",a:"Hebbal (560113)",c:"Hebbal",m:11,e:50,am:12,v:2,t:3,r3:0,r1:0},
+{p:"560114",a:"Electronic City (560114)",c:"Electronic City",m:45,e:204,am:41,v:6,t:3,r3:0,r1:1},
+{p:"560115",a:"Budigere Cross (560115)",c:"Budigere Cross",m:12,e:54,am:12,v:2,t:3,r3:0,r1:0},
+{p:"560116",a:"Bangalore Rural (560116)",c:"Bangalore Rural",m:2,e:9,am:1,v:0,t:3,r3:0,r1:0},
+{p:"560117",a:"Whitefield (560117)",c:"Whitefield",m:3,e:14,am:4,v:0,t:3,r3:0,r1:0},
+{p:"560300",a:"Kempegowda Intl Airport",c:"Hebbal",m:2,e:9,am:0,v:0,t:3,r3:0,r1:0},
+{p:"561203",a:"Dod Ballapur",c:"Bangalore Rural",m:307,e:1393,am:152,v:42,t:3,r3:4,r1:18},
+{p:"561204",a:"Bangalore Rural (561204)",c:"Bangalore Rural",m:18,e:82,am:4,v:2,t:3,r3:1,r1:1},
+{p:"561205",a:"Chikkaballapura (561205)",c:"Bangalore Rural",m:6,e:27,am:6,v:1,t:3,r3:0,r1:0},
+{p:"562106",a:"Attibele",c:"Electronic City",m:292,e:1325,am:147,v:40,t:3,r3:6,r1:21},
+{p:"562107",a:"Sarjapura",c:"Electronic City",m:233,e:1058,am:117,v:32,t:3,r3:4,r1:9},
+{p:"562111",a:"Ramanagara",c:"Bangalore Rural",m:23,e:104,am:6,v:3,t:3,r3:1,r1:1},
+{p:"562114",a:"Hoskote",c:"Budigere Cross",m:7073,e:0,am:117,v:0,t:0,r3:8,r1:104},
+{p:"562122",a:"Kolar",c:"Bangalore Rural",m:21,e:95,am:3,v:3,t:3,r3:0,r1:1},
+{p:"562123",a:"Nelamangala",c:"Bangalore Rural",m:287,e:1303,am:139,v:39,t:3,r3:5,r1:15},
+{p:"562125",a:"Sarjapura Hobli",c:"Koramangala",m:497,e:2256,am:330,v:68,t:2,r3:8,r1:29},
+{p:"562129",a:"Jigani / Anekal",c:"Bangalore Rural",m:27,e:123,am:8,v:4,t:3,r3:0,r1:2},
+{p:"562130",a:"Kanakapura",c:"Bangalore Rural",m:78,e:354,am:41,v:11,t:3,r3:3,r1:7},
+{p:"562132",a:"Bangalore Rural (562132)",c:"Bangalore Rural",m:9,e:41,am:2,v:1,t:3,r3:0,r1:0},
+{p:"562135",a:"Bangalore Rural (562135)",c:"Bangalore Rural",m:53,e:241,am:26,v:7,t:3,r3:0,r1:7},
+{p:"562149",a:"Hennagara / Anekal",c:"Bangalore Rural",m:95,e:431,am:95,v:13,t:3,r3:4,r1:8},
+{p:"562157",a:"Hesaraghatta",c:"Bangalore Rural",m:142,e:645,am:80,v:19,t:3,r3:3,r1:6},
+{p:"562162",a:"Bangalore Rural (562162)",c:"Bangalore Rural",m:61,e:277,am:28,v:8,t:3,r3:0,r1:4},
+{p:"562163",a:"Doddaballapura Apparel Park",c:"Bangalore Rural",m:18,e:82,am:15,v:2,t:3,r3:1,r1:2},
+{p:"562164",a:"Bangalore Rural (562164)",c:"Bangalore Rural",m:2,e:9,am:3,v:0,t:3,r3:0,r1:0}
+];
+
+
+const fmt=n=>n==null?'\u2014':n.toLocaleString('en-IN');
+const rows=CTR.map(r=>({...r, netNew:r.mom-r.momMed, ratio:r.am?+(r.mom/r.am).toFixed(1):null, vol:Math.round(r.mom*APP_RATE)}));
+const T=k=>rows.reduce((s,r)=>s+(r[k]||0),0);
+const AM=T('am');
+PINS.forEach(r=>{ r.r = r.am ? +(r.e/r.am).toFixed(1) : null; });
+
+/* ---- KPIs ---- */
+document.getElementById('kpis').innerHTML=[
+ ['MOM users, Bengaluru',fmt(CITY.users),'the plan assumed 300\u2013350K \u2014 it holds',1],
+ ['Not yet Isha meditators',fmt(CITY.users-CITY.meditators),((100*(CITY.users-CITY.meditators)/CITY.users).toFixed(1))+'% of the app base',1],
+ ['Reachable by phone',fmt(CITY.phone),(100*CITY.phone/CITY.users).toFixed(0)+'% have a number on record',1],
+ ['Pin-charge candidates','1,088','already referred 3+ people, unprompted',1],
+ ['On do-not-disturb',fmt(CITY.dnd),'0.1% \u2014 outreach is not the constraint',0],
+ ['Active meditators',fmt(AM),'Ishangam, 14 Bangalore centres',0],
+ ['Pincodes carrying half the target','20','of 135 \u2014 the captain structure is top-heavy',0]
+].map(([l,v,n,hl])=>'<div class="kpi'+(hl?' hl':'')+'"><div class="lab">'+l+'</div><div class="val">'+v+'</div><div class="note">'+n+'</div></div>').join('');
+
+/* ---- hero ---- */
+const ctrLo=Math.round(AM*CONV_LO), ctrHi=Math.round(AM*CONV_HI);
+const appAll=Math.round(CITY.users*APP_RATE), appReach=Math.round(CITY.phone*APP_RATE);
+const mx=Math.max(TARGET,ctrHi,appAll), w=v=>Math.max(1,Math.round(100*v/mx));
+document.getElementById('vs').innerHTML=[
+ {nm:'<b>Centre ecosystem, realistic</b>'+fmt(AM)+' active meditators &times; 3&ndash;8% historical volunteering conversion',lo:ctrLo,hi:ctrHi,c:'var(--series-2)',txt:fmt(ctrLo)+'&ndash;'+fmt(ctrHi)},
+ {nm:'<b>App base @3%, all users</b>'+fmt(CITY.users)+' Bengaluru MOM users &times; 3%',hi:appAll,c:'var(--series-1)',txt:fmt(appAll)},
+ {nm:'<b>App base @3%, contactable only</b>'+fmt(CITY.phone)+' with a phone number &times; 3%',hi:appReach,c:'var(--series-1)',op:.5,txt:fmt(appReach)},
+ {nm:'<b>Campaign target</b>active volunteers needed by 1 Dec 2026',hi:TARGET,c:'var(--text-muted)',txt:fmt(TARGET)}
+].map(r=>'<div class="vsrow"><div class="nm">'+r.nm+'</div><div class="track">'+
+ '<i style="width:'+w(r.hi)+'%;background:'+r.c+';opacity:'+(r.lo?.45:(r.op||1))+'"></i>'+
+ (r.lo?'<i style="width:'+w(r.lo)+'%;background:'+r.c+'"></i>':'')+'</div><div class="num">'+r.txt+'</div></div>').join('');
+
+document.getElementById('heroTarget').innerHTML=
+ 'At the <b>top</b> of the historical conversion range the centres yield <b>'+fmt(ctrHi)+'</b> \u2014 '+(100*ctrHi/TARGET).toFixed(0)+
+ '% of the target. Reaching 10,000 from centres alone needs <b>'+(100*TARGET/AM).toFixed(0)+
+ '%</b> of every active meditator in the city to volunteer, which has never happened. The app base closes the gap on paper: 3% of '+
+ fmt(CITY.users)+' is <b>'+fmt(appAll)+'</b>. But only <b>'+fmt(CITY.phone)+
+ '</b> of those users have a phone number on record, and 3% of <em>that</em> is <b>'+fmt(appReach)+
+ '</b>. <b>Combined realistic ceiling: '+fmt(ctrHi+appReach)+'</b> \u2014 short of 10,000. Either in-app notification becomes a hard dependency, or the 3% assumption has to do more work than any evidence currently supports.';
+
+document.getElementById('notMed').innerHTML=
+ '<b>'+fmt(CITY.users-CITY.meditators)+' of '+fmt(CITY.users)+' Bengaluru MOM users ('+(100*(CITY.users-CITY.meditators)/CITY.users).toFixed(1)+
+ '%) are not flagged as Isha meditators.</b> The volunteer pool the 30 July meeting was arguing over \u2014 the centre ecosystem \u2014 is the remaining '+
+ (100*CITY.meditators/CITY.users).toFixed(1)+'%. Nine out of ten people already using Miracle of Mind in this city sit entirely outside the structure everyone assumed would deliver the volunteers.';
+
+/* ---- centre table ---- */
+let sk='mom', sd=-1;
+function draw(){
+  const rs=[...rows].sort((a,b)=>{const x=a[sk],y=b[sk];if(x==null)return 1;if(y==null)return -1;
+    return typeof x==='string'?sd*x.localeCompare(y):sd*(x-y);});
+  const m=Math.max(...rows.filter(r=>!r.odd).map(r=>r.mom));
+  document.querySelector('#tbl tbody').innerHTML=rs.map(r=>
+    '<tr'+(r.odd?' class="muted"':'')+'><td>'+r.ctr+'</td>'+
+    '<td class="barcell"><span class="bar"><i style="width:'+Math.min(100,Math.round(100*r.mom/m))+'%"></i><span>'+fmt(r.mom)+'</span></span></td>'+
+    '<td>'+fmt(r.netNew)+'</td><td>'+fmt(r.momMed)+'</td><td>'+fmt(r.ph)+'</td><td>'+fmt(r.y26)+'</td>'+
+    '<td>'+(r.am?fmt(r.am):'\u2014')+'</td><td>'+(r.ratio==null?'\u2014':r.ratio)+'</td><td>'+fmt(r.vol)+'</td></tr>').join('');
+  document.querySelector('#tbl tfoot').innerHTML='<tr><td>Total</td><td>'+fmt(T('mom'))+'</td><td>'+fmt(T('netNew'))+
+    '</td><td>'+fmt(T('momMed'))+'</td><td>'+fmt(T('ph'))+'</td><td>'+fmt(T('y26'))+'</td><td>'+fmt(AM)+
+    '</td><td>'+(T('mom')/AM).toFixed(1)+'</td><td>'+fmt(T('vol'))+'</td></tr>';
+  document.querySelectorAll('#tbl th').forEach(t=>t.className=t.dataset.k===sk?(sd<0?'desc':'asc'):'');
+}
+document.querySelectorAll('#tbl th').forEach(t=>t.onclick=()=>{const k=t.dataset.k;
+  if(k===sk)sd=-sd;else{sk=k;sd=k==='ctr'?1:-1;}draw();});
+draw();
+
+/* ---- shared pincode filter/sort ---- */
+function filt(q,tf){q=(q||'').toLowerCase().trim();
+  return PINS.filter(r=>(!q||(r.p+' '+r.a+' '+r.c).toLowerCase().includes(q))&&(!tf||String(r.t)===tf));}
+function srt(rs,k,d){return rs.sort((a,b)=>{const x=a[k],y=b[k];if(x==null)return 1;if(y==null)return -1;
+  return typeof x==='string'?d*x.localeCompare(y):d*(x-y);});}
+
+/* ---- pincode seed table ---- */
+let pk='v',pd=-1;
+function pdraw(){
+  const rs=srt(filt(document.getElementById('q').value,document.getElementById('tf').value),pk,pd);
+  const m=Math.max(...PINS.filter(r=>r.t).map(r=>r.e));
+  document.querySelector('#ptbl tbody').innerHTML=rs.map(r=>
+    '<tr'+(r.t===0?' class="muted"':'')+'><td>'+(r.t===0?'flag':'T'+r.t)+'</td><td>'+r.p+'</td><td>'+r.a+'</td><td>'+r.c+'</td>'+
+    '<td>'+fmt(r.m)+'</td><td class="barcell"><span class="bar"><i style="width:'+Math.round(100*r.e/m)+'%"></i><span>'+(r.e?fmt(r.e):'\u2014')+'</span></span></td>'+
+    '<td>'+fmt(r.am)+'</td><td>'+(r.r==null?'\u2014':r.r)+'</td><td>'+(r.v?fmt(r.v):'\u2014')+'</td></tr>').join('');
+  document.getElementById('pcount').textContent=rs.length+' of '+PINS.length+' pincodes \u00b7 '+fmt(rs.reduce((s,r)=>s+r.v,0))+' volunteers';
+  document.querySelectorAll('#ptbl th').forEach(t=>t.className=t.dataset.k===pk?(pd<0?'desc':'asc'):'');
+}
+document.querySelectorAll('#ptbl th').forEach(t=>t.onclick=()=>{const k=t.dataset.k;
+  if(k===pk)pd=-pd;else{pk=k;pd=(k==='p'||k==='a'||k==='c')?1:-1;}pdraw();});
+['q','tf'].forEach(id=>document.getElementById(id).addEventListener('input',pdraw));
+pdraw();
+
+/* ---- captain seed table ---- */
+let ck='r3',cd=-1;
+function cdraw(){
+  const rs=srt(filt(document.getElementById('cq').value,document.getElementById('ctf').value),ck,cd);
+  document.querySelector('#ctbl tbody').innerHTML=rs.map(r=>
+    '<tr'+(r.t===0?' class="muted"':'')+'><td>'+(r.t===0?'flag':'T'+r.t)+'</td><td>'+r.p+'</td><td>'+r.a+'</td><td>'+r.c+'</td>'+
+    '<td>'+(r.r3?fmt(r.r3):'<span class="dim">none \u2014 source from centre</span>')+'</td><td>'+fmt(r.r1)+'</td>'+
+    '<td>'+(r.v?fmt(r.v):'\u2014')+'</td><td class="blank"></td><td class="blank"></td><td class="dim">not started</td></tr>').join('');
+  document.getElementById('ccount').textContent=rs.length+' pincodes \u00b7 '+fmt(rs.reduce((s,r)=>s+r.r3,0))+' candidates';
+  document.querySelectorAll('#ctbl th').forEach(t=>t.className=t.dataset.k===ck?(cd<0?'desc':'asc'):'');
+}
+document.querySelectorAll('#ctbl th').forEach(t=>{if(!t.dataset.k)return;t.onclick=()=>{const k=t.dataset.k;
+  if(k===ck)cd=-cd;else{ck=k;cd=(k==='p'||k==='a'||k==='c')?1:-1;}cdraw();};});
+['cq','ctf'].forEach(id=>document.getElementById(id).addEventListener('input',cdraw));
+cdraw();
+
+document.getElementById('dl').onclick=()=>{
+  const hdr=['tier','pincode','area','centre','mom_users_matched','mom_users_estimated','active_meditators',
+    'app_per_active_meditator','pin_charge_candidates_3plus','any_referrers','volunteer_target',
+    'pin_charge_name','pin_charge_phone','status','notes'];
+  const esc=v=>/[",\n]/.test(String(v))?'"'+String(v).replace(/"/g,'""')+'"':String(v);
+  const body=[...PINS].sort((a,b)=>(a.t||9)-(b.t||9)||b.v-a.v).map(r=>[
+    r.t||'FLAG',r.p,r.a,r.c,r.m,r.e||'',r.am,r.r==null?'':r.r,r.r3,r.r1,r.v||'','','','not started',
+    r.t===0?'BULK-LOAD ANOMALY - verify before use':(r.r3===0?'NO CANDIDATES - source from centre':'')
+  ].map(esc).join(','));
+  const blob=new Blob([hdr.join(',')+'\n'+body.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='mom-bangalore-captain-seed.csv';a.click();URL.revokeObjectURL(a.href);
+};
+
+/* ---- tabs ---- */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('section[data-p]').forEach(s=>s.classList.toggle('hidden',s.dataset.p!==b.dataset.t));
+});
+</script>
+</body>
+</html>
