@@ -1,0 +1,15 @@
+center,pincode,app_users,active_referrers,total_referral_count,note
+Banaswadi,NOT AVAILABLE - no stored pincode field on this model,4986,257,674,geography = real center_id FK not inferred
+Bangalore Rural,NOT AVAILABLE - no stored pincode field on this model,1748,109,334,geography = real center_id FK not inferred
+Bannerghatta Road,NOT AVAILABLE - no stored pincode field on this model,6569,372,1161,geography = real center_id FK not inferred
+Budigere Cross,NOT AVAILABLE - no stored pincode field on this model,9511,247,735,geography = real center_id FK not inferred
+Electronic City,NOT AVAILABLE - no stored pincode field on this model,6311,385,1055,geography = real center_id FK not inferred
+Girinagar,NOT AVAILABLE - no stored pincode field on this model,2775,144,1167,geography = real center_id FK not inferred
+Hebbal,NOT AVAILABLE - no stored pincode field on this model,8876,527,1588,geography = real center_id FK not inferred
+Indiranagar,NOT AVAILABLE - no stored pincode field on this model,3705,179,605,geography = real center_id FK not inferred
+Jayanagar,NOT AVAILABLE - no stored pincode field on this model,2515,120,330,geography = real center_id FK not inferred
+Koramangala,NOT AVAILABLE - no stored pincode field on this model,6038,337,1013,geography = real center_id FK not inferred
+Malleswaram,NOT AVAILABLE - no stored pincode field on this model,6292,303,761,geography = real center_id FK not inferred
+Marathahalli,NOT AVAILABLE - no stored pincode field on this model,5919,311,924,geography = real center_id FK not inferred
+Vijayanagar,NOT AVAILABLE - no stored pincode field on this model,8636,433,1216,geography = real center_id FK not inferred
+Whitefield,NOT AVAILABLE - no stored pincode field on this model,1998,105,289,geography = real center_id FK not inferred
