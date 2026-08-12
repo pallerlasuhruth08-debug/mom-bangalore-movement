@@ -143,6 +143,7 @@ td.blank{background:var(--surface-2)}
   <button data-t="pin">Pincode seed</button>
   <button data-t="cap">Captain seed</button>
   <button data-t="data">Data &amp; limits</button>
+  <button data-t="gm">The ground machine</button>
 </div>
 
 <!-- ============ ARGUMENT ============ -->
@@ -461,6 +462,14 @@ It models a volunteer as one person hosting one seven-minute sit. The team-based
 </div>
 </section>
 
+<!-- ============ GROUND MACHINE ============ -->
+<section data-p="gm" class="hidden">
+<div class="card" style="padding:0;overflow:hidden">
+  <iframe id="gmFrame" src="mom-bangalore-ground-machine.html" title="The Ground Machine — BJP election-machinery comparison"
+    style="width:100%;border:0;display:block;min-height:600px"></iframe>
+</div>
+</section>
+
 <div class="foot">
 <b>Sources &amp; method.</b> MOM columns: Ishangam <code>miracle.of.mind</code>, grouped on <code>record_center</code>, queried 31 Jul 2026 — 2,392,695 records nationally, 293,569 with <code>ip_city = Bengaluru</code>. "Not yet meditators" = users minus <code>is_meditator</code>. "Phone on record" = <code>record_phone</code> set. "Signed up 2026" = <code>first_login_ts ≥ 1 Jan 2026</code>. Meditator and active-meditator columns: Ishangam / Santosha, region Karnataka, snapshot 10 Jul 2026; "active" = last transaction within 12 months. Centre figures use Ishangam's own centre assignment and are <em>not</em> filtered by IP city. Kanakapura Road returns zero MOM records under that name. Pincode columns: <code>contact_id_fkey</code> joined to <code>res.partner.zip</code> — 76,002 matched, 71,750 resolving to a Bangalore pincode, 2,441 outside the city, 96 invalid; ~2% of partner reads are withheld by record rules. Referrer columns: <code>total_referred</code> on the same matched set — 3,804 distinct referring contacts, 288 outside the Bangalore pincode list. "Volunteers @3%" is the campaign planning assumption from the grassroots plan, not an observed conversion rate.
 </div>
@@ -762,7 +771,18 @@ const MONTHS=[["Feb 25",152309],["Mar 25",61339],["Apr 25",8974],["May 25",6889]
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('section[data-p]').forEach(s=>s.classList.toggle('hidden',s.dataset.p!==b.dataset.t));
+  if(b.dataset.t==='gm') sizeGmFrame();
 });
+
+/* ---- ground-machine iframe autosize ---- */
+function sizeGmFrame(){
+  var f=document.getElementById('gmFrame');
+  try{
+    var h=f.contentWindow.document.documentElement.scrollHeight;
+    if(h) f.style.height=h+'px';
+  }catch(e){}
+}
+document.getElementById('gmFrame').addEventListener('load',sizeGmFrame);
 </script>
 </body>
 </html>
