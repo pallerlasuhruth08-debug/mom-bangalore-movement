@@ -389,14 +389,14 @@ Every figure below now derives from the exact Ishangam pull of 12 Aug (26,937 6-
       <th data-k="e">Est. MOM users</th>
       <th data-k="am6">Active meditators (6mo)</th>
       <th data-k="lmed">Meditators</th><th data-k="lpot">Potential meditators</th>
-      <th data-k="v">Signup target</th><th data-k="act">Active @60%</th>
+      <th data-k="v">Signup target vols</th><th data-k="act">60% active vols</th>
     </tr></thead>
     <tbody></tbody>
   </table>
   </div>
   <p style="font-size:12px;color:var(--text-muted);margin:12px 0 0"><b>All four data columns are a direct, exact, server-side Ishangam query run 12 Aug 2026</b> — not sampled, not estimated. <b>Active meditators (6mo)</b> = <code>res.partner</code> where <code>is_meditator = true</code> and <code>last_txn_date ≥ 1 Feb 2026</code>, grouped on <code>zip</code>, across the 14 real Bangalore centres (26,937 city-wide). That field reproduces the previous 12-month active figure to within 1.5%, which is what validates it. <b>Meditators</b> (75,869) and <b>Potential meditators</b> (660,008) are the same <code>read_group</code> with <code>is_meditator</code> true / false. <b>Est. MOM users</b> is unchanged and remains modelled — each pincode's share of the 71,750-record matched sample applied to the 293,569 Bengaluru base; MOM app records carry no pincode field, so this column cannot be made exact. 562114 (Hoskote) is excluded from that distribution as a bulk-load artefact.
   <br><br>
-  <b>Signup target is a stretch allocation, not a forecast.</b> Each pool is given its historically-observed conversion rate — 8% for six-month-active meditators (top of the observed 3–8% centre range), 3% for meditators not active in six months, 0.5% for potential meditators — giving an expected <b>6,923 signups</b> from the Isha base. The 16,700 target is then distributed across pincodes in proportion to that yield, so hitting it requires <b>2.41× the conversion these pools have historically delivered</b>. <b>Active @60%</b> applies the 40% attrition assumption; the column sums to 10,016. The signup column sums to exactly 16,700 by construction. Change the three rates and every target moves. The MOM app base is deliberately <em>not</em> in this weighting — it supplies roughly half the city-wide signup ceiling, but carries no pincode, so folding it in would import a 24%-sample estimate into a per-pincode target.</p>
+  <b>Signup target vols is a stretch allocation, not a forecast.</b> Each pool is given its historically-observed conversion rate — 8% for six-month-active meditators (top of the observed 3–8% centre range), 3% for meditators not active in six months, 0.5% for potential meditators — giving an expected <b>6,923 signups</b> from the Isha base. The 16,700 target is then distributed across pincodes in proportion to that yield, so hitting it requires <b>2.41× the conversion these pools have historically delivered</b>. <b>60% active vols</b> applies the 40% attrition assumption; the column sums to 10,016. The signup column sums to exactly 16,700 by construction. Change the three rates and every target moves. The MOM app base is deliberately <em>not</em> in this weighting — it supplies roughly half the city-wide signup ceiling, but carries no pincode, so folding it in would import a 24%-sample estimate into a per-pincode target.</p>
 </div>
 </section>
 
@@ -422,7 +422,7 @@ Every figure below now derives from the exact Ishangam pull of 12 Aug (26,937 6-
   <table id="ctbl">
     <thead><tr>
       <th data-k="t">Tier</th><th data-k="p">Pincode</th><th data-k="a">Area</th><th data-k="c">Centre</th>
-      <th data-k="r3">Candidates (≥3 refs)</th><th data-k="r1">Any referrers</th><th data-k="v">Signup target</th><th data-k="act">Active @60%</th>
+      <th data-k="r3">Candidates (≥3 refs)</th><th data-k="r1">Any referrers</th><th data-k="v">Signup target vols</th><th data-k="act">60% active vols</th>
       <th>Pin-charge</th><th>Phone</th><th>Status</th>
     </tr></thead>
     <tbody></tbody>
@@ -671,7 +671,7 @@ document.getElementById('vs').innerHTML=[
  {nm:'<b>MOM app base, contactable only</b>'+fmt(MDL.app_nm)+' non-meditator app users \u00d7 '+MDL.phone_pct+'% with a phone \u00d7 3%',hi:MDL.app_reach,c:'var(--series-1)',op:.5,txt:fmt(MDL.app_reach)},
  {nm:'<b>MOM app base, full</b>requires in-app notification by 1 Nov',hi:MDL.app_full,c:'var(--series-1)',txt:fmt(MDL.app_full)},
  {nm:'<b>Both routes combined, with in-app access</b>the realistic ceiling at historical conversion',hi:MDL.ceil_inapp,c:'var(--good)',txt:fmt(MDL.ceil_inapp)},
- {nm:'<b>Signup target</b>signed hosts needed for '+fmt(TARGET)+' active',hi:SIGNUPS,c:'var(--text-muted)',txt:fmt(SIGNUPS)}
+ {nm:'<b>Signup target vols</b>signed hosts needed for '+fmt(TARGET)+' active',hi:SIGNUPS,c:'var(--text-muted)',txt:fmt(SIGNUPS)}
 ].map(r=>'<div class="vsrow"><div class="nm">'+r.nm+'</div><div class="track">'+
  '<i style="width:'+w(r.hi)+'%;background:'+r.c+';opacity:'+(r.lo?.45:(r.op||1))+'"></i>'+
  (r.lo?'<i style="width:'+w(r.lo)+'%;background:'+r.c+'"></i>':'')+'</div><div class="num">'+r.txt+'</div></div>').join('');
@@ -750,7 +750,7 @@ cdraw();
 
 document.getElementById('dl').onclick=()=>{
   const hdr=['tier','pincode','area','centre','mom_users_matched','mom_users_estimated','active_meditators_12mo','active_meditators_6mo',
-    'meditators_live','potential_meditators_live','pin_charge_candidates_3plus','any_referrers','signup_target','active_at_60pct',
+    'meditators_live','potential_meditators_live','pin_charge_candidates_3plus','any_referrers','signup_target_vols','active_vols_60pct',
     'pin_charge_name','pin_charge_phone','status','notes'];
   const esc=v=>/[",\n]/.test(String(v))?'"'+String(v).replace(/"/g,'""')+'"':String(v);
   const body=[...PINS].sort((a,b)=>(a.t||9)-(b.t||9)||b.v-a.v).map(r=>[
