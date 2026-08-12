@@ -144,6 +144,21 @@ tr.ldetail>td{background:var(--surface-2);padding:14px 18px;cursor:default}
 tr.crow{cursor:pointer}
 .lnote{font-size:11.5px;color:var(--text-muted);margin-top:8px}
 
+/* machinery tree */
+.tnode{margin:3px 0 3px 10px;border-left:2px solid var(--line)}
+.tnode>summary{cursor:pointer;padding:7px 12px;font-size:13.5px;list-style:none;display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-radius:6px}
+.tnode>summary::-webkit-details-marker{display:none}
+.tnode>summary::before{content:"▸";color:var(--text-muted);font-size:11px;transition:transform .12s}
+.tnode[open]>summary::before{transform:rotate(90deg)}
+.tnode>summary:hover{background:var(--surface-2)}
+.tnode[open]>summary{color:var(--series-1)}
+.tnode[open]>summary b{color:var(--series-1)}
+.tstat{color:var(--text-muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.tp{margin-left:26px}
+.tpyr{padding:6px 4px 12px 30px}
+.chainlbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:700;margin:0 0 8px}
+.chainwrap{margin-bottom:20px}
+
 </style>
 </head>
 <body>
@@ -305,6 +320,24 @@ Every figure below now derives from the exact Ishangam pull of 12 Aug (26,937 6-
    layer 1: one per pincode              layer 2: only in the 56 pincodes      layer 3: ≤10 vols each        layer 4: the signups       at 40% attrition
    (Tier 3: ~6 pincodes per cluster lead)  needing >10 captains (≤10 capts each)</div>
   <p style="font-size:13px;color:var(--text-secondary);margin:14px 0 0">Modelled on the BJP booth machinery, with a hard rule: <b>no one holds more than 10 direct reports.</b> A captain holds ≤10 on-ground vols; where a pincode needs more than 10 captains, an Area POC layer is inserted holding ≤10 captains each; the pin charge holds whichever layer sits below them, never more than 10 seats. 20 Tier 1 pincodes carry 49% of signups; Tier 3's 86 pincodes are grouped into ~14 clusters where one lead can hold several pin-charge seats. Total machinery above the vols: <b>2,037 people</b> — that is itself a recruitment target, and it is why the captain layer leans on the 1,088 proven referrers. Per-pincode structures are on the Captain seed tab.</p>
+</div>
+
+<div class="card">
+  <h2>The machinery, visualised</h2>
+  <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 16px">One picture for the whole city, then the two chain types, then every centre and pincode explorable below. Nobody anywhere holds more than 10 people.</p>
+
+  <div class="chainlbl">Whole Bangalore — the full tree, top to bottom</div>
+  <div id="cityChain" class="chainwrap"></div>
+
+  <div class="chainlbl">Approach A — 4-layer chain (used where a pincode needs more than 10 captains)</div>
+  <div id="chain4" class="chainwrap"></div>
+
+  <div class="chainlbl">Approach B — 3-layer chain (everywhere else)</div>
+  <div id="chain3" class="chainwrap"></div>
+
+  <div class="chainlbl" style="margin-top:22px">Explore it — click a centre, then a pincode, to walk the tree</div>
+  <div id="mtree" style="margin-top:6px"></div>
+  <p style="font-size:11.5px;color:var(--text-muted);margin:12px 0 0">Same numbers as the Captain seed tab — the tree and the table are two views of one structure. Centres here are the seed assignment (includes Kanakapura Road, which carries no live MOM records but still holds four pincodes organisationally).</p>
 </div>
 
 <div class="card">
@@ -789,6 +822,45 @@ document.querySelectorAll('#ctbl th').forEach(t=>{if(!t.dataset.k)return;t.oncli
   if(k===ck)cd=-cd;else{ck=k;cd=(k==='p'||k==='a'||k==='c')?1:-1;}cdraw();};});
 ['cq','ctf'].forEach(id=>document.getElementById(id).addEventListener('input',cdraw));
 cdraw();
+
+/* ---- machinery tree (plan tab) ---- */
+(function(){
+  var host=document.getElementById('mtree'); if(!host) return;
+  function node(n,cls,extra){return '<div class="node '+(cls||'')+'"><b>'+n[0]+'</b><span>'+n[1]+'</span>'+(n[2]?'<i>'+n[2]+'</i>':'')+'</div>'+(extra===false?'':'<div class="arrow">\u2192</div>');}
+  var TC=PINS.reduce((s,r)=>s+r.capt,0), TP=PINS.reduce((s,r)=>s+r.poc,0), TV=PINS.reduce((s,r)=>s+r.v,0), TA=PINS.reduce((s,r)=>s+r.act,0);
+  var groups={}; PINS.forEach(r=>{(groups[r.c]=groups[r.c]||[]).push(r);});
+  var CN=Object.keys(groups).length;
+  var L4=PINS.filter(r=>r.ly===4), L3=PINS.filter(r=>r.ly===3);
+  var s=(a,k)=>a.reduce((x,r)=>x+r[k],0);
+  document.getElementById('cityChain').innerHTML='<div class="pyr">'+
+    node(['1','Bangalore','the campaign'],'top')+
+    node([CN,'Centres','existing Isha centres'])+
+    node(['135','Pin charges','one per pincode'])+
+    node([fmt(TP),'Area POCs','only in '+L4.length+' large pincodes'])+
+    node([fmt(TC),'Captains','\u226410 vols each'])+
+    node([fmt(TV),'On-ground vols',fmt(TA)+' active @60%'],'base',false)+'</div>';
+  document.getElementById('chain4').innerHTML='<div class="pyr">'+
+    node([L4.length,'Pin charges',L4.length+' pincodes \u00b7 '+fmt(s(L4,'v'))+' vols'],'top')+
+    node([fmt(s(L4,'poc')),'Area POCs','\u226410 captains each'])+
+    node([fmt(s(L4,'capt')),'Captains','\u226410 vols each'])+
+    node([fmt(s(L4,'v')),'On-ground vols',fmt(s(L4,'act'))+' active'],'base',false)+'</div>';
+  document.getElementById('chain3').innerHTML='<div class="pyr">'+
+    node([L3.length,'Pin charges',L3.length+' pincodes \u00b7 '+fmt(s(L3,'v'))+' vols'],'top')+
+    node([fmt(s(L3,'capt')),'Captains','\u226410 vols each'])+
+    node([fmt(s(L3,'v')),'On-ground vols',fmt(s(L3,'act'))+' active'],'base',false)+'</div>';
+  var names=Object.keys(groups).sort((a,b)=>s(groups[b],'v')-s(groups[a],'v'));
+  host.innerHTML=names.map(function(n){
+    var rs=groups[n].slice().sort((a,b)=>b.v-a.v);
+    return '<details class="tnode"><summary><b>'+n+'</b><span class="tstat">'+rs.length+' pincodes \u00b7 '+
+      fmt(s(rs,'v'))+' vols \u00b7 '+fmt(s(rs,'capt'))+' captains'+(s(rs,'poc')?' \u00b7 '+fmt(s(rs,'poc'))+' POCs':'')+'</span></summary>'+
+      rs.map(function(r){
+        return '<details class="tnode tp"><summary><b>'+r.p+'</b> '+r.a+
+          ' <span class="lchip l'+r.ly+'">'+r.ly+'-layer</span><span class="tstat">'+
+          fmt(r.v)+' vols \u00b7 '+r.capt+' captains'+(r.poc?' \u00b7 '+r.poc+' POCs':'')+'</span></summary>'+
+          '<div class="tpyr">'+pyramid(r)+'</div></details>';
+      }).join('')+'</details>';
+  }).join('');
+})();
 
 document.getElementById('dl').onclick=()=>{
   const hdr=['tier','pincode','area','centre','mom_users_matched','mom_users_estimated','active_meditators_12mo','active_meditators_6mo',
