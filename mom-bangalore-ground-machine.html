@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ground Machine — MOM Bangalore volunteer activation</title>
+<style>
+:root{
+  --ink:#2B2118; --muted:#6B6055; --faint:#8C8177; --acc:#B85042; --acc-dk:#8E3B31;
+  --sand:#E7E8D1; --cream:#F3F1EC; --dark:#3A2C20; --dark2:#34271C;
+  --eyel:#EBA189; --metal:#B9AC9E; --rule:#E2DCD3; --paper:#FFFFFF;
+  --serif:Cambria,"Bookman Old Style",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Calibri,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16.5px/1.65 var(--sans);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* ---------- masthead ---------- */
+.mast{background:var(--dark);color:#fff;padding:68px 0 60px;position:relative;overflow:hidden}
+.mast::after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;
+  background:var(--dark2);right:-150px;top:-230px}
+.mast::before{content:"";position:absolute;width:330px;height:330px;border-radius:50%;
+  background:var(--dark2);right:-60px;bottom:-190px}
+.mast .wrap{position:relative;z-index:2}
+.kicker{font:700 12.5px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--eyel);margin:0 0 18px}
+.mast h1{font:700 clamp(34px,5.2vw,52px)/1.08 var(--serif);margin:0 0 14px;letter-spacing:-.01em}
+.mast .dek{font:400 clamp(17px,2.3vw,21px)/1.45 var(--serif);color:var(--sand);margin:0 0 10px;max-width:22em}
+.mast .stinger{font:italic 400 15.5px/1.5 var(--sans);color:var(--eyel);margin:0 0 30px}
+.mast .meta{font:400 13.5px/1.85 var(--sans);color:var(--metal);margin:0}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+.prose{max-width:760px}
+section{padding:54px 0;border-top:1px solid var(--rule);scroll-margin-top:64px}
+section:first-of-type{border-top:0}
+.eyebrow{display:flex;align-items:center;gap:10px;font:700 11.5px/1 var(--sans);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 14px}
+.eyebrow::before{content:"";width:9px;height:9px;background:var(--acc);flex:none}
+h2{font:700 clamp(25px,3.4vw,33px)/1.18 var(--serif);margin:0 0 12px;letter-spacing:-.01em}
+h3{font:700 20px/1.3 var(--serif);margin:34px 0 8px}
+h4{font:700 15.5px/1.35 var(--sans);margin:26px 0 6px;color:var(--ink)}
+p{margin:0 0 14px}
+.lede{font-size:18px;line-height:1.6;color:var(--muted);max-width:42em;margin-bottom:26px}
+a{color:var(--acc-dk)}
+strong{font-weight:700}
+em{font-style:italic}
+
+/* ---------- sticky nav ---------- */
+nav.toc{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.6) blur(8px);border-bottom:1px solid var(--rule)}
+nav.toc ul{display:flex;flex-wrap:wrap;gap:4px 22px;list-style:none;margin:0;padding:13px 32px;
+  max-width:1080px;margin:0 auto;font:600 12.5px/1.6 var(--sans);letter-spacing:.02em}
+nav.toc a{color:var(--muted);text-decoration:none;white-space:nowrap}
+nav.toc a:hover{color:var(--acc)}
+
+/* ---------- findings / banded rows ---------- */
+.rows{display:grid;gap:8px;margin:24px 0 8px}
+.row{display:grid;grid-template-columns:74px 1fr;gap:20px;padding:20px 24px;align-items:start}
+.row:nth-child(odd){background:var(--sand)}
+.row:nth-child(even){background:var(--cream)}
+.row .num{font:700 26px/1 var(--serif);color:var(--acc)}
+.row h3{margin:0 0 5px;font:700 17.5px/1.35 var(--serif)}
+.row p{margin:0;color:var(--muted);font-size:15px}
+
+/* ---------- cards ---------- */
+.grid{display:grid;gap:14px;margin:22px 0}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--cream);padding:20px 22px}
+.card.sand{background:var(--sand)}
+.card .ktag{font:700 10.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:10px}
+.card .big{font:700 30px/1.1 var(--serif);color:var(--acc);display:block;margin-bottom:6px}
+.card h4{margin:0 0 5px;font:700 16px/1.3 var(--serif)}
+.card p{margin:0;font-size:14.5px;line-height:1.55;color:var(--muted)}
+
+/* ---------- callout ---------- */
+.callout{background:var(--sand);padding:22px 26px;margin:26px 0}
+.callout.hot{background:var(--acc);color:#fff}
+.callout.ink{background:var(--ink);color:#fff}
+.callout p:first-child{font:700 18px/1.4 var(--serif);margin:0 0 8px}
+.callout p{margin:0 0 6px;color:var(--muted);font-size:15px}
+.callout p:last-child{margin-bottom:0}
+.callout.hot p:first-child,.callout.ink p:first-child{color:#fff}
+.callout.hot p,.callout.ink p{color:var(--sand)}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;margin:22px 0;font-size:14.5px}
+.tbl th{font:700 10.5px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--acc);text-align:left;padding:0 14px 9px;vertical-align:bottom}
+.tbl td{padding:11px 14px;vertical-align:top;color:var(--muted)}
+.tbl tbody tr:nth-child(odd){background:var(--sand)}
+.tbl tbody tr:nth-child(even){background:var(--cream)}
+.tbl td:first-child{font:700 15px/1.4 var(--serif);color:var(--ink)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tr.total td{font-weight:700;color:var(--ink)}
+.tbl tr.total td:not(:first-child){font-family:var(--sans)}
+.wide{max-width:none}
+
+/* ---------- stat strip ---------- */
+.strip{display:flex;gap:10px;margin:24px 0;flex-wrap:wrap}
+.strip .s{flex:1 1 0;min-width:120px;background:var(--sand);padding:16px 18px}
+.strip .s:nth-child(even){background:var(--cream)}
+.strip .s.hot{background:var(--acc)}
+.strip .s b{display:block;font:700 25px/1.1 var(--serif);color:var(--acc)}
+.strip .s.hot b{color:#fff}
+.strip .s span{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.strip .s.hot span{color:var(--sand)}
+
+/* ---------- ladder ---------- */
+.ladder{margin:24px 0}
+.ladder .rung{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;
+  padding:13px 20px;margin-bottom:7px}
+.ladder .rung:nth-child(odd){background:var(--sand)}
+.ladder .rung:nth-child(even){background:var(--cream)}
+.ladder .rung b{font:700 16px/1.3 var(--serif)}
+.ladder .rung i{font-style:normal;color:var(--muted);font-size:14.5px;margin-left:12px}
+.ladder .rung .sp{font:700 13.5px/1 var(--sans);color:var(--acc);white-space:nowrap}
+
+/* ---------- misc ---------- */
+.tag{display:inline-block;font:700 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 7px;border:1px solid currentColor;color:var(--faint);vertical-align:2px;margin-left:2px}
+.tag.c{color:var(--acc)}
+ul.tick{list-style:none;padding:0;margin:14px 0}
+ul.tick li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--rule);font-size:15px}
+ul.tick li:last-child{border-bottom:0}
+ul.tick li::before{content:"✓";position:absolute;left:4px;top:9px;color:var(--acc);font-weight:700}
+ol.dec{counter-reset:d;list-style:none;padding:0;margin:14px 0}
+ol.dec li{counter-increment:d;position:relative;padding:13px 20px 13px 56px;margin-bottom:7px;font-size:15px}
+ol.dec li:nth-child(odd){background:var(--sand)}
+ol.dec li:nth-child(even){background:var(--cream)}
+ol.dec li::before{content:counter(d);position:absolute;left:22px;top:12px;
+  font:700 18px/1.3 var(--serif);color:var(--acc)}
+.note{font-size:13.5px;color:var(--faint);margin-top:14px}
+.src{font-size:13.5px;line-height:1.75;color:var(--muted)}
+.src a{color:var(--acc-dk);text-decoration:none;border-bottom:1px solid var(--rule)}
+footer{background:var(--dark);color:var(--metal);padding:44px 0;font-size:13.5px;margin-top:40px}
+footer b{color:#fff;font-family:var(--serif);font-size:16px;display:block;margin-bottom:8px}
+
+@media (max-width:860px){
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3,.g2{grid-template-columns:1fr}
+  .row{grid-template-columns:52px 1fr;gap:14px;padding:16px 18px}
+  .wrap{padding:0 20px}
+  nav.toc ul{padding:11px 20px}
+  .ladder .rung{grid-template-columns:1fr;gap:4px}
+  .ladder .rung i{margin-left:0;display:block}
+}
+@media print{
+  nav.toc{display:none}
+  section{page-break-inside:avoid;padding:26px 0}
+  .mast{background:#3A2C20 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">MOM Bangalore · Volunteer activation</p>
+    <h1>The Ground Machine</h1>
+    <p class="dek">What the BJP election machine says about our 10,000 — and the operating model it implies.</p>
+    <p class="stinger">Structure, not headcount. The number to argue about is 1,530 — not 10,000.</p>
+    <p class="meta">
+      Ashram Central · MOM Movement Core Team<br>
+      11 August 2026 · Suhruth &amp; Santosh, volunteer movement vertical<br>
+      Reads with <code>MOM-BANGALORE-CONTEXT.md</code> §4 and §9, and <code>mom-volunteer-mobilisation-plan.md</code>
+    </p>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#summary">In one page</a></li>
+    <li><a href="#machine">How the machine works</a></li>
+    <li><a href="#diagnosis">The diagnosis</a></li>
+    <li><a href="#model">The operating model</a></li>
+    <li><a href="#calendar">The calendar</a></li>
+    <li><a href="#verify">Verification</a></li>
+    <li><a href="#decisions">Decisions</a></li>
+    <li><a href="#limits">Limits &amp; sources</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ SUMMARY ============ -->
+<section id="summary">
+  <p class="eyebrow">The argument in one page</p>
+  <h2>Four findings, in the order they matter</h2>
+  <div class="rows">
+    <div class="row">
+      <div class="num">01</div>
+      <div>
+        <h3>“10,000 volunteers” is not a target the BJP machine would ever set</h3>
+        <p>They fix a geography they did not draw, impose a committee template on every unit, and let the headcount fall out as arithmetic. The 89,47,845 booth-committee members reported in 2024–25 was never a goal — it is 7,88,197 booth presidents × 11.35.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num">02</div>
+      <div>
+        <h3>The constraint is not 10,000 captains. It is ~1,530 middle-layer leaders</h3>
+        <p>Today the plan runs 63 pin-charges straight to 10,000 captains — a span of control of 159. Every span in the BJP chain sits between 5 and 15. Two layers are missing.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num">03</div>
+      <div>
+        <h3>1,088 of those 1,530 are already identified, inside Ishangam</h3>
+        <p>People who have referred three or more others onto the app with no campaign and no incentive. The insight is already in our own plan of record — it was applied to 63 roles instead of 1,530.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num">04</div>
+      <div>
+        <h3>Two numbers in our own plan disagree by a factor of ten</h3>
+        <p>Yoga Veera measured 6% of signups becoming doers. The plan assumes 60%. At any credible rate, 16,700 signups under-delivers by two to three times.</p>
+      </div>
+    </div>
+  </div>
+  <p class="note">Confidence is tagged throughout: <span class="tag c">Certain</span> multiple credible sources · <span class="tag">Likely</span> one credible source or strong inference · <span class="tag">Guessing</span> my inference, flagged.</p>
+</section>
+
+<!-- ============ PART 1 ============ -->
+<section id="machine">
+  <p class="eyebrow">Part one</p>
+  <h2>How the machine actually works</h2>
+  <p class="lede">Seven mechanisms. Each one has a direct translation for us, and none of them is about political content — this is organisational design.</p>
+
+  <h3>1 · Borrow your denominator from outside</h3>
+  <div class="prose">
+    <p>The Election Commission caps a polling booth at roughly 1,200–1,500 voters — Karnataka’s 2023 actual average was <strong>883 voters across 58,282 booths</strong>. <span class="tag c">Certain</span> So the booth count is handed to the party from outside. Everything above and below it is a ratio applied to that number.</p>
+    <p>The <em>panna</em> is the same trick one level down: literally <strong>one page of the printed electoral roll</strong> — about 30 voters, five or six families. The party never had to decide “how many people per volunteer.” It outsourced that decision to the EC’s page-break, which made the unit non-negotiable, uniform and independently auditable. Nobody argues about their allocation, because nobody drew it.</p>
+    <p>Worth noticing: <em>booth</em>, <em>shakti kendra</em> and <em>panna</em> appear nowhere in the BJP constitution. <span class="tag">Likely</span> They are an operational overlay mapped onto government geography, deliberately separate from the party’s own legal structure. The delivery machine and the org chart are not the same thing.</p>
+  </div>
+  <div class="callout">
+    <p>For us: a pincode is not a unit. It holds 80,000–100,000 people.</p>
+    <p>A pincode is a <em>mandal</em>. We currently have no booth — see <a href="#model">the operating model</a>.</p>
+  </div>
+
+  <h3>2 · Structural targets, never headcount targets</h3>
+  <div class="strip">
+    <div class="s hot"><b>89,47,845</b><span>booth-committee members reported</span></div>
+    <div class="s"><b>=</b><span>7,88,197 booth presidents</span></div>
+    <div class="s"><b>× 11.35</b><span>members per committee</span></div>
+  </div>
+  <p class="prose">Nobody ever said “recruit 89 lakh people.” They said <em>eleven per booth</em>, ran the Election Commission’s booth list, and 89 lakh came out. <span class="tag c">Certain</span> — party-published figures; the framing is mine.</p>
+  <div class="grid g2">
+    <div class="card"><span class="ktag">What they actually say</span><h4>Structural</h4>
+      <p>“Every booth must have a committee of 21 / 18 / 11.”<br>“Every page of the roll must have a panna pramukh.”<br>“Every 5–7 booths form a shakti kendra.”<br>“Any mandal above 80 booths gets split.”</p></div>
+    <div class="card"><span class="ktag">And per-unit outcomes</span><h4>Never aggregate</h4>
+      <p>“Get 100–200 more votes in your booth than 2019.” — Shah, Karnataka 2024<br>“Secure ≥60% of the votes on your page.” — Gujarat<br>“Ensure a 10-point turnout rise at each booth.”</p></div>
+  </div>
+  <div class="grid g2">
+    <div class="card sand"><h4>A headcount target gives you</h4>
+      <p>No stopping rule. No coverage guarantee — 100,000 people can all live in three neighbourhoods. No job description at the moment of recruitment. Nothing auditable, because heads are trivially inflated.</p></div>
+    <div class="card sand"><h4>A structural target gives you</h4>
+      <p>A denominator you cannot fudge. A completion percentage that means something (“UP is at 74% of booth presidents”). A pre-written role for every recruit. A physical address attached to every single person.</p></div>
+  </div>
+
+  <h3>3 · Make the atomic ask finite, small, and among people you already know</h3>
+  <div class="strip">
+    <div class="s"><b>60</b><span>voters</span></div>
+    <div class="s"><b>47</b><span>voters</span></div>
+    <div class="s"><b>35</b><span>voters</span></div>
+    <div class="s"><b>30</b><span>voters</span></div>
+    <div class="s hot"><b>~6</b><span>voters</span></div>
+  </div>
+  <div class="prose">
+    <p>Gujarat 2007 → Gujarat 2017 → UP 2022 → UP and Bengal today → the <em>panna samiti</em>: five people per page, one drawn from each family printed on it. <span class="tag c">Certain</span></p>
+    <p>Read that last step again. They pick <strong>one member from each family already printed on the page.</strong> The recruit is being asked to talk to their own neighbours — something they are already socially licensed to do, requiring no skill they lack, finishable in about two hours. And because Indian residential geography is caste-clustered, mirroring the page automatically mirrors the local social composition, without anyone designing a quota. <span class="tag">Likely</span></p>
+    <p>The task is a closed checklist, never “campaign”: know the thirty by name · mark each as ours, theirs or undecided · stay in contact through the year · confirm they have a voter slip · on polling day, physically walk them out and report back.</p>
+  </div>
+  <div class="callout hot">
+    <p>Our captain-with-a-team-of-eight is already a panna. That part of the plan is right and should be defended.</p>
+    <p>The lesson is not the number thirty. It is that <strong>conversion rate is a function of ask size</strong> — which is why they kept cutting it.</p>
+  </div>
+
+  <h3>4 · Every span 5–15, and a management layer when it breaks</h3>
+  <div class="ladder">
+    <div class="rung"><div><b>Mandal President</b><i>10–14 shakti kendra heads</i></div><div class="sp">span ≈ 12</div></div>
+    <div class="rung"><div><b>Shakti Kendra Pramukh</b><i>5–6 booth presidents</i></div><div class="sp">span ≈ 6</div></div>
+    <div class="rung"><div><b>Booth President</b><i>11–25 committee members</i></div><div class="sp">span ≈ 11–25</div></div>
+    <div class="rung"><div><b>Panna Pramukh</b><i>~30 named voters</i></div><div class="sp">a contact list, not supervision</div></div>
+  </div>
+  <p class="prose">Four independent sources plus three arithmetic checks converge on <strong>5–6 booths per shakti kendra</strong>. <span class="tag c">Certain</span> The shakti kendra has no constitutional standing whatsoever — it exists for exactly one reason: a mandal head in Bengal was supervising 210–270 booths, and that is not supervision, it is a mailing list.</p>
+  <div class="callout">
+    <p>The remedy was two-sided, and worth copying exactly.</p>
+    <p><strong>Split the oversized unit</strong> — Bengal went from 464 to 1,200+ mandals; UP’s standing rule is that anything over 80 booths gets split. <strong>And insert a pure management layer</strong> between. Ganz’s field data agrees from the other direction: a part-time organiser sustains 5 relationships, a full-timer 10.</p>
+  </div>
+
+  <h3>5 · Nothing is open-ended</h3>
+  <p class="prose">The formula is invariant: <strong>a name + one verb + a per-unit number + a start and end date + a photo receipt carrying the unit ID.</strong></p>
+  <table class="tbl wide">
+    <thead><tr><th>Campaign</th><th>Window</th><th>The ask on one worker</th><th>Scale reached</th></tr></thead>
+    <tbody>
+      <tr><td>Tiffin Baithak</td><td>One day, 12–3pm</td><td>Bring lunch from home, eat with your shakti kendra, upload it</td><td>4,729 centres at once</td></tr>
+      <tr><td>Gaon Chalo</td><td>8 days</td><td>Go to your assigned village, sit, collect feedback</td><td>7 lakh villages</td></tr>
+      <tr><td>Mann Ki Baat</td><td>Monthly, 30 min</td><td>Gather 10–30 people at your booth, listen, photograph, upload</td><td>8,250 booths in Delhi</td></tr>
+      <tr><td>Ghar Chalo</td><td>Dussehra → poll day</td><td>Be one of ten workers at your booth; add 20 new voters</td><td>Statewide, Maharashtra</td></tr>
+      <tr><td>Vijaya Sankalpa</td><td>Campaign period</td><td>Put a sticker on every house and vehicle on your page</td><td>13.3 lakh houses</td></tr>
+      <tr><td>Vistarak Abhiyan</td><td>9 days</td><td><em>Live</em> in your assigned booth</td><td>48,000 across 48,000 booths</td></tr>
+    </tbody>
+  </table>
+  <p class="prose">Two things to steal. <strong>The ask is always countable by the worker himself</strong> — thirty voters, twenty members, five wall-paintings — never “raise awareness.” And <strong>the deadline is borrowed from the calendar</strong>: Dussehra, Yoga Day, the last Sunday of the month. The calendar does the motivational work for free.</p>
+
+  <h3>6 · Assign before you train — and verify against the beneficiary</h3>
+  <div class="grid g2">
+    <div class="card"><span class="ktag">The sequence</span><h4>Assign, do, then train</h4>
+      <p>A new worker’s first act is receiving one printed page. Camps run two days residential, 170–600 people, 12–14 topics — a third on meaning, a third on skills, a third on operations, with a headline figure closing. Training is retention-and-identity work applied to someone <em>already doing the task</em>.</p></div>
+    <div class="card"><span class="ktag">The tell</span><h4>They built OTP verification</h4>
+      <p>Every beneficiary a worker claimed to have contacted was sent an OTP on a toll-free number. The weekly review deck has two separate columns — <em>contacts made</em> and <em>contacts verified</em>. They spent engineering effort specifically so the app could not be used to fake ground work. <span class="tag c">Certain</span></p></div>
+  </div>
+  <div class="rows">
+    <div class="row"><div class="num">A</div><div><h3>Verify against the beneficiary, not the volunteer</h3>
+      <p>30,000+ call centres exist partly for this; in Gujarat each voter was contacted around five times. The party independently checks the end person rather than trusting the worker’s report.</p></div></div>
+    <div class="row"><div class="num">B</div><div><h3>Define “active” with one cheap binary test</h3>
+      <p>Rajasthan’s operational rule: a booth committee is not active unless it has a functioning WhatsApp group. Not “engagement” — a yes-or-no anyone can check remotely.</p></div></div>
+    <div class="row"><div class="num">C</div><div><h3>The unit’s leader and the unit’s watcher are different people</h3>
+      <p>Booth <em>adhyaksh</em> ≠ booth <em>palak</em>. Verifiers audit other people’s mandals. Vistaraks file sealed A/B/C ratings that route past the person being rated.</p></div></div>
+  </div>
+  <p class="note">Why this matters: MP’s 95–96% worker verification was reported as <em>exceptional</em> against a typical norm of 50–60%. <span class="tag">Likely</span> Ordinarily about half a party roster cannot be confirmed to be a real, reachable, willing person.</p>
+
+  <h3>7 · Paid in title, not in money</h3>
+  <p class="prose">Workers are unpaid. Gujarat runs roughly one titled position for every fifteen voters — title inflation is the mechanism, not a side effect.</p>
+  <div class="grid g4">
+    <div class="card"><span class="ktag">01</span><h4>Titles, mass-produced</h4><p>15 lakh page presidents and 81 lakh committee members in Gujarat alone.</p></div>
+    <div class="card"><span class="ktag">02</span><h4>Physical tokens</h4><p>ID cards for page presidents. Certificates for members and trainees.</p></div>
+    <div class="card"><span class="ktag">03</span><h4>Remembered dates</h4><p>Birthday and anniversary messages from state leadership. A CRM dressed as affection.</p></div>
+    <div class="card"><span class="ktag">04</span><h4>Proximity, by video</h4><p>A small-town worker gets to be live on a call with the Prime Minister.</p></div>
+    <div class="card"><span class="ktag">05</span><h4>Equal contribution</h4><p>The tiffin baithak works because the Chief Minister brings his own lunch too.</p></div>
+    <div class="card"><span class="ktag">06</span><h4>Points and ranks</h4><p>Activity points, published tiers, invitations earned by score.</p></div>
+    <div class="card"><span class="ktag">07</span><h4>A ladder with age caps</h4><p>Youth office capped at 35, mandal president at 45. Churn is forced, so young people can actually win.</p></div>
+    <div class="card"><span class="ktag">08</span><h4>Service as meaning</h4><p>585 Rajasthan workers died doing COVID relief. Not a transactional incentive producing that.</p></div>
+  </div>
+  <div class="callout hot">
+    <p>The one prohibition: never place a late joiner above the people who did the ground work.</p>
+    <p>The entire unpaid-labour system is collateralised on the promise that effort converts into standing. Around 25% of 2024 tickets went to defectors — the most-cited demotivator in the machine, and entirely self-inflicted. And even so, <strong>30–40% of booth-level volunteers leave every year.</strong></p>
+  </div>
+</section>
+
+<!-- ============ PART 2 ============ -->
+<section id="diagnosis">
+  <p class="eyebrow">Part two</p>
+  <h2>Now hold our plan against it</h2>
+  <p class="lede">Three findings. The third one is the serious one.</p>
+
+  <h3>Finding one · We have a mandal and a panna, and nothing in between</h3>
+  <table class="tbl wide">
+    <thead><tr><th>BJP layer</th><th>Typical span</th><th>Our equivalent today</th></tr></thead>
+    <tbody>
+      <tr><td>Mandal — 60–90 booths</td><td>10–14</td><td>Pincode / pin-charge — 63 &nbsp;&nbsp;✓ correct layer, correct count</td></tr>
+      <tr><td>Shakti Kendra — 5–6 booths</td><td>~6</td><td><strong>missing</strong></td></tr>
+      <tr><td>Booth — ~880 voters</td><td>11–25</td><td><strong>missing</strong></td></tr>
+      <tr><td>Panna — ~30 voters</td><td>—</td><td>Captain + team of eight &nbsp;&nbsp;✓ correct</td></tr>
+    </tbody>
+  </table>
+  <div class="grid g2">
+    <div class="card" style="background:var(--acc);color:#fff">
+      <span class="big" style="color:#fff">159</span>
+      <p style="color:var(--sand)">The span of control implied by 63 pin-charges running 10,000 captains directly. Every span in the BJP chain sits between 5 and 15; Ganz caps a part-time organiser at 5.</p></div>
+    <div class="card sand"><h4>This is the Anna Hazare shape</h4>
+      <p>India Against Corruption assembled a hundred thousand people in a week and had nothing at all six months later — because its smallest organisational unit was <em>the rally itself</em>. No chapter, no ward committee, no named local leader, no fixed weekly meeting. <span class="tag">Likely</span></p></div>
+  </div>
+  <p class="note">Both ends of our structure are correctly designed. They are simply wired directly to each other.</p>
+
+  <h3>Finding two · The in-app push is the Rally for Rivers mechanic</h3>
+  <p class="prose"><code>MOM-BANGALORE-CONTEXT.md</code> §6 concludes: <em>“In-app notification, reaching the ~123,000 users with no phone on record, is what closes the gap.”</em> Isha’s own most comparable precedent argues the other way.</p>
+  <table class="tbl">
+    <thead><tr><th>Stage</th><th class="num">Number</th><th class="num">Conversion</th></tr></thead>
+    <tbody>
+      <tr><td>Missed calls / “supporters”</td><td class="num">162,000,000</td><td class="num">—</td></tr>
+      <tr><td>Registered as volunteers</td><td class="num">6,500</td><td class="num"><strong>0.004%</strong></td></tr>
+      <tr><td>Selected and relocated as core cadre</td><td class="num">100</td><td class="num">1.5% of registrants</td></tr>
+    </tbody>
+  </table>
+  <div class="callout ink">
+    <p>At the Rally for Rivers rate, 10,000 volunteers needs 250 million contacts.</p>
+    <p>That path does not exist. Isha has repeatedly proven it can generate astronomical zero-friction reach. It has never demonstrated a mechanism that converts broadcast reach into ground labour. <span class="tag" style="color:var(--eyel)">Certain</span> — both figures come from Isha’s own account, which makes the ratio internally valid regardless of the absolutes.</p>
+  </div>
+  <div class="grid g3">
+    <div class="card"><span class="big">0.02%</span><h4>Cold recruitment</h4><p>424,179 peer-to-peer messages offering a $5 gift card produced 101 volunteers.</p></div>
+    <div class="card"><span class="big">+8.5 pts</span><h4>A message from someone you know</h4><p>Versus +2–3 for a stranger at the door, and roughly zero for a mass text.</p></div>
+    <div class="card"><span class="big">15–30%</span><h4>Warm-pool conversion</h4><p>The sector benchmark — and the only rate that reaches 10,000. This is where it comes from.</p></div>
+  </div>
+  <p class="note">The in-app push is worth doing as an awareness asset. Its critical-path status <em>as a recruitment engine</em> should be re-examined.</p>
+
+  <h3>Finding three · Our own data and our own assumption disagree by ten times</h3>
+  <div class="strip">
+    <div class="s"><b>1,000</b><span>signed up</span></div>
+    <div class="s"><b>350</b><span>trained</span></div>
+    <div class="s"><b>60</b><span>ran a session</span></div>
+    <div class="s hot"><b>6%</b><span>became doers — the plan assumes 60%</span></div>
+  </div>
+  <p class="prose"><code>MOM-BANGALORE-CONTEXT.md</code> §9 records the Yoga Veera funnel above. The same document then assumes 40% attrition — i.e. 60% survival — and sizes signups at 14,000, corrected to 16,700 in <code>CONTEXT.md</code> §5. Those two numbers are a factor of ten apart, and <strong>the smaller one is our own measured data.</strong></p>
+  <table class="tbl">
+    <thead><tr><th>Assumed signup → active rate</th><th class="num">Signups needed for 10,000</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>6% — our own Yoga Veera number</td><td class="num">167,000</td><td>Impossible</td></tr>
+      <tr><td>15–20% — industry standard</td><td class="num">50,000</td><td>Very hard</td></tr>
+      <tr><td>25–30% — best case, warm pool</td><td class="num">33,000</td><td>Hard but real</td></tr>
+      <tr class="total"><td>60% — the current plan assumption</td><td class="num">16,700</td><td>Not supported by any evidence, ours or anyone’s</td></tr>
+    </tbody>
+  </table>
+  <p class="note">We are under-recruiting by two to three times, not by 2,700. And the fix is not to go and find 50,000 people.</p>
+
+  <h3>The resolution · Do not raise the target — shrink the ask</h3>
+  <p class="prose">The meeting pushed the ask in the <em>opposite</em> direction: “10,000 volunteers doing feet-on-street activation,” qualifying by hosting a school, corporate or apartment event. That is a job, not a panna. At that ask size, Yoga Veera’s 6% is the right planning number and 10,000 is unreachable by any route.</p>
+  <p class="prose">The resolution is to stop applying one conversion assumption to two different roles.</p>
+  <div class="grid g2">
+    <div class="card"><span class="ktag">Role one — the panna</span><span class="big">~8,800</span><h4>Captains</h4>
+      <p>The ask: <em>get eight people you already know to meditate in December.</em> Small, finite, completable, needs no skill they lack — about two hours of lifetime effort. Recruited from the warm pool; expect 25–30% conversion.</p></div>
+    <div class="card"><span class="ktag">Role two — the karyakarta</span><span class="big">~1,530</span><h4>Site and cluster leads</h4>
+      <p>The ask: <em>own a site, hold a fortnightly meeting, recruit and hold seven captains.</em> This is the real job — recruited person by person, with a scheduled ask and written materials. Sourced from the 1,088 existing referrers.</p></div>
+  </div>
+  <div class="callout hot">
+    <p>Argue about 1,530, not 10,000.</p>
+    <p>It is the number that decides whether December happens. Ten thousand captains with nobody above them is a list. 1,530 leaders with a fortnightly meeting is a machine.</p>
+  </div>
+</section>
+
+<!-- ============ PART 3 ============ -->
+<section id="model">
+  <p class="eyebrow">Part three</p>
+  <h2>The operating model</h2>
+  <p class="lede">Two layers to insert. They close exactly on the numbers we already have — the same 10,000, the same 63, the same tiering.</p>
+
+  <table class="tbl wide">
+    <thead><tr><th>Layer</th><th>Unit</th><th class="num">Count</th><th class="num">Span</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Centre</td><td>Existing</td><td class="num">15</td><td class="num">4</td><td>existing</td></tr>
+      <tr><td>Pin-charge</td><td>Pincode — the mandal</td><td class="num">63</td><td class="num">3–5</td><td>already planned</td></tr>
+      <tr><td>Cluster lead</td><td>Six sites — the shakti kendra</td><td class="num">~211</td><td class="num">6</td><td><strong>NEW</strong></td></tr>
+      <tr><td>Site lead</td><td>One physical place — the booth</td><td class="num">~1,258</td><td class="num">7</td><td><strong>NEW</strong></td></tr>
+      <tr><td>Captain</td><td>Team of eight — the panna</td><td class="num">~8,800</td><td class="num">8</td><td>already planned</td></tr>
+      <tr><td>Team member</td><td>—</td><td class="num">~70,000</td><td class="num">—</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>What a site is — our booth</h3>
+  <p class="prose">A <strong>site is a physical place with a natural boundary and a resident population</strong>, in which about seven teams (≈56 people) can plausibly be formed: an apartment complex or gated community, a school, an office floor or tech park, a college department, or a temple / RWA / street cluster in non-apartment areas.</p>
+  <div class="callout">
+    <p>Build the site list from an external source <em>before</em> recruiting anyone into it.</p>
+    <p>BBMP ward lists, apartment-complex directories, the school list, tech-park tenant lists. Then the target stops being “get 10,000” and becomes <strong>“every named site in Tier 1 has a site lead”</strong> — a percentage against a denominator we did not invent. Note this does not contradict the “teams are not geographically bound” rule: the <em>site</em> is where the site lead works. A team can live anywhere.</p>
+  </div>
+
+  <h3>The arithmetic closes</h3>
+  <table class="tbl">
+    <thead><tr><th>Tier</th><th>Pincodes</th><th class="num">Captains</th><th class="num">Sites @7</th><th class="num">Clusters @6</th></tr></thead>
+    <tbody>
+      <tr><td>Tier 1</td><td>20</td><td class="num">4,304</td><td class="num">615</td><td class="num">103</td></tr>
+      <tr><td>Tier 2</td><td>28</td><td class="num">2,684</td><td class="num">383</td><td class="num">64</td></tr>
+      <tr><td>Tier 3</td><td>87 (≈15 clusters)</td><td class="num">1,818</td><td class="num">260</td><td class="num">44</td></tr>
+      <tr><td>Event capture</td><td>—</td><td class="num">1,194</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr class="total"><td>Total</td><td>135</td><td class="num">10,000</td><td class="num">1,258</td><td class="num">211</td></tr>
+    </tbody>
+  </table>
+  <div class="strip">
+    <div class="s"><b>3.3</b><span>clusters per pin-charge</span></div>
+    <div class="s"><b>6.0</b><span>sites per cluster</span></div>
+    <div class="s"><b>7.0</b><span>captains per site</span></div>
+    <div class="s"><b>8</b><span>members per captain</span></div>
+  </div>
+  <p class="note">Every span in the chain lands between 3 and 8 — inside what a part-time volunteer can actually hold.</p>
+
+  <h3>Where the 1,530 come from — this is the whole answer</h3>
+  <p class="prose"><code>CONTEXT.md</code> §3: <strong>1,088 people in Bangalore have referred three or more others onto the app</strong> — unprompted, uncompensated, with no campaign running. Every Tier 1 pincode has at least five of them.</p>
+  <table class="tbl">
+    <thead><tr><th>Requirement</th><th class="num">Count</th></tr></thead>
+    <tbody>
+      <tr><td>Site leads</td><td class="num">1,258</td></tr>
+      <tr><td>Cluster leads</td><td class="num">211</td></tr>
+      <tr><td>Pin-charges</td><td class="num">63</td></tr>
+      <tr class="total"><td>Middle layer required</td><td class="num">1,532</td></tr>
+      <tr><td>Pre-qualified referrers available</td><td class="num">1,088 &nbsp;(71%)</td></tr>
+      <tr><td>Balance, from the centre base (ceiling 2,736)</td><td class="num">~444</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p>This insight is already in our own plan of record. It was applied to the wrong number.</p>
+    <p>“Stage 1 stops being <em>find 100 people willing to lead a pincode</em>, and becomes <em>call the people who are already doing this for free</em>.” — <code>mom-volunteer-mobilisation-plan.md</code> §1. It was used to source 63 pin-charges; it should source 1,530. That is the highest-leverage correction available to us, and it is executable this week with a single Ishangam query and a call list.</p>
+  </div>
+  <p class="note">If 1,088 is thin, widening to <code>total_referred &ge; 2</code> roughly doubles the pool. Rank by referrals, then by pincode need.</p>
+
+  <h3>What technology does, and does not do</h3>
+  <p class="prose">The meeting settled on “technology-enabled, not technology-led.” The BJP stack draws that line precisely — copy the line rather than re-deriving it.</p>
+  <table class="tbl wide">
+    <thead><tr><th>Tech does</th><th>Tech must not do</th></tr></thead>
+    <tbody>
+      <tr><td>Tell the captain which eight people are theirs</td><td>Contact the eight</td></tr>
+      <tr><td>Give today’s script, asset or card</td><td>Build the relationship</td></tr>
+      <tr><td>Capture the receipt — a <em>logged session</em>, not a claim</td><td>Substitute for the sit</td></tr>
+      <tr><td>Aggregate to a per-unit dashboard within a day</td><td>Make the judgement call</td></tr>
+      <tr><td>Surface laggard sites by name into the weekly call</td><td>Replace the weekly call</td></tr>
+      <tr><td>Award points, ranks, invitations</td><td>Replace the leader’s phone call</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ CALENDAR ============ -->
+<section id="calendar">
+  <p class="eyebrow">The calendar</p>
+  <h2>Eight named fortnights, one verb each</h2>
+  <p class="lede">Anchored to the gates already in the plan — platform live 30 September, launch 10 October, in-app 1 November, campaign 1 December.</p>
+  <table class="tbl wide">
+    <thead><tr><th>#</th><th>Window</th><th>Name</th><th>One verb — the per-unit ask</th><th>Receipt</th></tr></thead>
+    <tbody>
+      <tr><td>F1</td><td>12–25 Aug</td><td><strong>Koogu</strong></td><td><strong>Call</strong> — each of the 1,088 referrers gets a personal 30-minute call. Not a broadcast</td><td>Call logged with outcome</td></tr>
+      <tr><td>F2</td><td>26 Aug–8 Sep</td><td><strong>Harvest</strong></td><td><strong>Capture</strong> — each centre captures ≥70 named intents at consecration close</td><td>Named list per centre</td></tr>
+      <tr><td>F3</td><td>9–22 Sep</td><td><strong>Naming the ground</strong></td><td><strong>Map</strong> — each Tier 1 pincode names its ~31 sites from an external list</td><td>Site register</td></tr>
+      <tr><td>F4</td><td>23 Sep–6 Oct</td><td><strong>First light</strong></td><td><strong>Sit</strong> — every named site lead hosts one group sit</td><td>≥3 members log a session</td></tr>
+      <tr><td>F5</td><td>7–20 Oct</td><td><strong>Launch</strong></td><td><strong>Gather</strong> — every cluster holds its first fortnightly meeting</td><td>Attendance photo + site ID</td></tr>
+      <tr><td>F6</td><td>21 Oct–3 Nov</td><td><strong>Seven</strong></td><td><strong>Recruit</strong> — every site lead names seven captains</td><td>7 names with phone numbers</td></tr>
+      <tr><td>F7</td><td>4–17 Nov</td><td><strong>Eight</strong></td><td><strong>Build</strong> — every captain names eight team members</td><td>8 names in-app</td></tr>
+      <tr><td>F8</td><td>18 Nov–1 Dec</td><td><strong>Dry run</strong></td><td><strong>Prove</strong> — every team completes one logged group sit before 1 Dec</td><td>Logged session</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p>Each fortnight escalates the ask exactly one notch.</p>
+    <p>Call → capture → map → sit → gather → recruit → build → prove. Skipping rungs is what produces the 6%. Then in December, borrow the calendar for the heartbeat: a <strong>fixed weekly city-wide sit at a fixed hour</strong>, every team, every week, one logged session each. The existing 1 / 13 / 20 / 31 December peaks then sit on top of a weekly pulse instead of on top of nothing.</p>
+  </div>
+</section>
+
+<!-- ============ VERIFY ============ -->
+<section id="verify">
+  <p class="eyebrow">Verification</p>
+  <h2>What counts as real — or the whole thing is paper</h2>
+  <p class="lede">Assume half our roster cannot be confirmed until proven otherwise. That is the documented norm for unverified rosters, and it is what every audit mechanism in the study exists to catch.</p>
+  <table class="tbl wide">
+    <thead><tr><th>Unit</th><th>Counts as real only when</th></tr></thead>
+    <tbody>
+      <tr><td>Team</td><td><strong>≥3 distinct members have logged a session in the app.</strong> Not when the captain says the team exists</td></tr>
+      <tr><td>Site</td><td>A WhatsApp group exists with ≥8 members and a message in the last seven days</td></tr>
+      <tr><td>Cluster</td><td>Its fortnightly meeting happened, with an attendance photo carrying the site ID</td></tr>
+      <tr><td>Pincode</td><td>≥70% of its named sites are real by the above</td></tr>
+    </tbody>
+  </table>
+  <div class="grid g3">
+    <div class="card"><span class="ktag">The free OTP</span><h4>The logged session</h4><p>It costs nothing — the app already records it — and it is the only metric in the campaign that cannot be produced by a volunteer talking about their own work.</p></div>
+    <div class="card"><span class="ktag">Who you call</span><h4>Five members, not the lead</h4><p>Sample-call five ordinary team members per site each fortnight: does your captain exist, did you sit, would you do it again.</p></div>
+    <div class="card"><span class="ktag">How you report</span><h4>Coverage %, never totals</h4><p>Booth coverage in one state ranged 0.8% to 97.1% inside a single “successful” headline number. A dead pincode and a thriving one averaging to 50% is a lie that survives until December.</p></div>
+  </div>
+  <h4>Two more rules</h4>
+  <p class="prose"><strong>Separate the leader from the watcher.</strong> Do not let a pin-charge audit their own pincode — cross-post, so each verifies a neighbouring pincode’s sites. <strong>And grade every site with a one-notch goal:</strong> weak → developing → strong → anchor, on logged sessions. Progression, not perfection, is the motivator, and it gives every weak site a small legible win instead of an unreachable leaderboard position.</p>
+  <p class="note"><code>mom-bangalore-dashboard.html</code> should be re-cut on this basis. Every line should read “Tier 1: 412 of 615 sites real (67%)” — never “8,400 volunteers signed up.”</p>
+</section>
+
+<!-- ============ DECISIONS ============ -->
+<section id="decisions">
+  <p class="eyebrow">What this changes</p>
+  <h2>Six decisions — and four things to leave alone</h2>
+  <div class="grid g2" style="align-items:start">
+    <div>
+      <h4>Decide</h4>
+      <ol class="dec">
+        <li><strong>Replace the headcount target with a structural one.</strong> The board metric becomes “% of named sites that are real.” Everything else follows from this one decision.</li>
+        <li><strong>Fund the middle layer</strong> — ~1,530 site and cluster leads, from the 1,088 referrers plus centre base. A September deliverable, not a November one.</li>
+        <li><strong>Split the two conversion assumptions.</strong> Captains ≈25–30% off the warm pool; leads recruited person by person. Stop applying 60% to either.</li>
+        <li><strong>Re-examine the 1 November in-app date’s critical-path status.</strong> It is an awareness asset, not a recruitment engine.</li>
+        <li><strong>Name the eight fortnights and publish the calendar.</strong> This week.</li>
+        <li><strong>Adopt the logged-session definition of “real”.</strong> Free, unfakeable, already built.</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Do not change</h4>
+      <ul class="tick">
+        <li><strong>The team-of-eight construct.</strong> It is a panna, and it is correct.</li>
+        <li><strong>The 63 weighted pin-charges.</strong> Correct layer, correct count.</li>
+        <li><strong>Threshold-not-rank incentives</strong>, team-based and cause-connected. It matches the evidence exactly.</li>
+        <li><strong>Schools as the cheap channel.</strong> A student who takes it to parents and friends is a panna; 300 schools for ~600 volunteer-visits is the best leverage ratio in the plan. In this model a school <em>is</em> a site, and its POC is a site lead.</li>
+      </ul>
+      <h4>Six additions to the incentive design</h4>
+      <p class="prose" style="font-size:15px">Manufacture titles aggressively — 1,530 named roles, printed ID cards. Automate remembered affection — birthdays from a <em>named senior person</em>. Make the top prize proximity, delivered by video. Equal contribution, not hospitality. Segment in parallel (youth with a hard age cap, women, 3–4 professional cells) rather than diluting in series — this is where the “conscious Jatha” youth idea belongs, as a parallel stack with its own numbers. And <strong>promote by recruitment</strong>: the only route from captain to site lead is having personally brought three other captains, which turns the recognition ladder into the viral loop.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIMITS ============ -->
+<section id="limits">
+  <p class="eyebrow">The honest limit</p>
+  <h2>Three months cannot build cadre. It can build cells.</h2>
+  <p class="lede">The RSS ladder takes four to six years and produces around 735 top-rung people a year nationally; Isha’s own Sahabhagi path runs eighteen months to three years and runs two cohorts annually. <span class="tag c">Certain</span> Neither can produce 1,530 organisers by October.</p>
+  <p class="prose">The calibration is the RSS centenary sprint itself: a roughly three-month household-contact drive aiming at crores of homes — run <strong>on top of 83,000 existing daily cells and a hundred years of standing structure.</strong> The sprint is the visible part. The cells are why the sprint works. So the compressed path is the <strong>three-day entry rung</strong>, not the multi-year one, and the sequence is assign first, train second: give a site lead their site in week one, run the two-day camp in month two.</p>
+  <div class="callout hot">
+    <p>The real deliverable is not ten million minutes, and it is not 10,000 volunteers.</p>
+    <p>It is ~1,500 standing cells that make the next campaign cost a fifth of this one. Every organisation in this study that sustained a ground army had the same thing: a small, named, geographically-bounded unit that met on a fixed schedule and owned something. Every organisation that collapsed had a crowd instead.</p>
+  </div>
+
+  <h3>Confidence and limits</h3>
+  <ul class="tick" style="max-width:820px">
+    <li>BJP <strong>structural</strong> figures — booth, mandal and shakti kendra counts — derive from public Election Commission geography and are internally consistent across independent reports. Treat as reliable.</li>
+    <li>BJP <strong>headcount claims</strong> — 89 lakh committee members, 14 crore members, 40 lakh MP workers — are organisation-published and unaudited. Treat as <em>upper bounds</em>. The MP verification figure is itself the best evidence that unverified rosters overstate by roughly two times.</li>
+    <li><strong>Isha’s public numbers</strong> (17m volunteers, 162m RFR supporters, 3.2bn Save Soil reach) are self-reported and have never been independently audited. The RFR funnel is used above because <em>both</em> ends come from Isha’s own account, which makes the ratio internally valid regardless of the absolutes.</li>
+    <li><strong>Volunteer attrition benchmarks</strong> are US/UK practitioner data, not peer-reviewed, and may not transfer to a devotional Indian context. My instinct is Isha’s retention should be materially <em>better</em> — but that is <span class="tag">Guessing</span>, and Yoga Veera’s 6% is the only Isha-native datapoint we have, and it points the other way.</li>
+    <li><strong>The highest-priority unknown is unchanged from <code>CONTEXT.md</code> §6:</strong> MOM activity data — sessions, minutes, last-active. Without it the tiering ranks <em>registration</em> density, not <em>engagement</em> density, and those may be different maps. A site built on a registration map that is not an engagement map will be a real site with nobody in it.</li>
+  </ul>
+
+  <h3>Principal sources</h3>
+  <p class="src"><strong>BJP structure and execution.</strong>
+    <a href="https://theprint.in/politics/managing-voters-doorstep-services-the-panna-pramukh-network-bjps-banking-on-for-gujarat-poll/1215691/">The Print — the panna pramukh network</a> ·
+    <a href="https://theprint.in/politics/otp-verification-of-labharthis-daily-reports-how-bjp-is-micromanaging-its-ls-campaign-in-up/2036577/">The Print — OTP verification and daily reports, UP</a> ·
+    <a href="https://theprint.in/politics/lunchboxes-4729-centres-70k-party-workers-what-haryana-cm-saini-bjp-state-chief-plan-to-serve/2991397/">The Print — tiffin baithaks, Haryana</a> ·
+    <a href="https://theprint.in/politics/doctors-iitians-lawyers-bjps-army-of-bengal-professionals-their-big-job-ahead-of-polls/576562/">The Print — Bengal professionals</a> ·
+    <a href="https://www.theweek.in/theweek/statescan/2022/12/24/replicating-bjp-page-committee-model-gujarat-to-other-states.html">The Week — the Gujarat page committee model</a> ·
+    <a href="https://scroll.in/article/973934/how-did-the-bjp-build-organisational-strength-in-bengal-with-more-than-a-little-help-from-the-rss">Scroll — organisational strength in Bengal</a> ·
+    <a href="https://restofworld.org/2024/bjp-saral-app-data-gathering/">Rest of World — the Saral app</a> ·
+    <a href="https://pulitzercenter.org/stories/inside-bjps-whatsapp-machine">Pulitzer Center — inside the WhatsApp machine</a> ·
+    <a href="https://www.deccanherald.com/amp/story/elections%2Findia%2F60-votes-in-every-booth-shah-s-mantra-for-28-28-2962682">Deccan Herald — “60 votes in every booth”, Karnataka</a> ·
+    <a href="https://www.business-standard.com/article/politics/bjp-devises-elaborate-booth-level-strategy-for-its-mission-bengal-120111801452_1.html">Business Standard — the Mission Bengal 23-point booth directive</a> ·
+    <a href="https://jkbjp.in/about-bjp/bjp-constitution/">BJP Constitution</a>
+  </p>
+  <p class="src"><strong>Failure modes.</strong>
+    <a href="https://scroll.in/article/1049144/karnataka-decoded-45-charts-that-reveal-where-the-bjp-went-wrong-and-what-went-right-for-congress">Scroll — Karnataka 2023 decoded</a> ·
+    <a href="https://www.outlookindia.com/national/bjp-cannot-function-without-rsss-support-ratan-sharda">Outlook — Ratan Sharda on 2024</a> ·
+    <a href="https://www.thenewsminute.com/news/rss-stage-managed-anna-hazare-movement-says-ex-india-against-corruption-team-member-180413">The News Minute — RSS and India Against Corruption</a>
+  </p>
+  <p class="src"><strong>Cadre supply and organising theory.</strong>
+    <a href="https://www.rss.org/Encyc/2025/3/21/RSS-s-Sah-Sarkaryavah-Mukunda-CR-s-Press-Briefing.html">rss.org — Sah Sarkaryavah briefing 2025</a> ·
+    <a href="https://organiser.org/2024/06/10/241962/bharat/know-all-about-rss-sangh-shiksha-varg-a-historical-overview/">Organiser — Sangh Shiksha Varg</a> ·
+    <a href="https://en.wikipedia.org/wiki/Swadhyaya_Movement">Swadhyaya Movement</a> ·
+    <a href="https://d3n8a8pro7vhmx.cloudfront.net/themes/52e6e37401925b6f9f000002/attachments/original/1423171411/Organizers_Handbook.pdf">Ganz — Organizers Handbook</a> ·
+    <a href="https://www.huffpost.com/entry/the-new-organizers-part-1_b_132782">Exley — The New Organizers</a> ·
+    <a href="https://medium.com/challenges-to-democracy/first-chapter-how-organizations-develop-activists-by-hahrie-han-c2b8dc7e231e">Han — How Organizations Develop Activists</a> ·
+    <a href="https://campaigninnovation.org/research/measuring-the-power-of-personal-connection-a-relational-organizing-field-test">CCI — relational organising field test</a>
+  </p>
+  <p class="src"><strong>Isha.</strong>
+    <a href="https://isha.sadhguru.org/en/blog/article/rally-for-rivers-update">Rally for Rivers update</a> ·
+    <a href="https://public-isha.sadhguru.org/public/OUT19_Anukampa-IshaOutreachReport-Online.pdf">Isha Outreach Report 2018-19</a> ·
+    <a href="https://isha.sadhguru.org/us/en/volunteer/sadhguru-sahabhagi">Sadhguru Sahabhagi</a> ·
+    <a href="https://telanganatoday.com/isha-gramotsavam-to-unite-80000-rural-athletes-across-india">Gramotsavam 2026</a>
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <b>One aside worth carrying into the next call</b>
+    <p style="max-width:60em">Isha’s closest precedent for what we are attempting is not Rally for Rivers or Save Soil — it is <strong style="color:#fff">Gramotsavam</strong>. Seven thousand self-organised teams of around eleven, with local captains, across 40,000 villages, running annually for eighteen consecutive years, with no spiritual prerequisite. Isha has already proven it can get 7,000 people to appoint themselves captain and recruit eleven others. That mechanic has simply never been pointed at an urban volunteering goal.</p>
+  </div>
+</footer>
+
+</body>
+</html>
